@@ -45,6 +45,6 @@ git checkout Moriond17_23Jan_v2
 cd $CMSSW_BASE/src
 
 # get the ntuplizer
-git clone https://github.com/jkunkle/UMDNTuple
+git clone https://github.com/albertobelloni/UMDNTuple
 
 scram b -j4
