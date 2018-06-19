@@ -28,6 +28,9 @@ PhotonProducer::PhotonProducer(  ) :
     ph_etaWidth(0),
     ph_phiWidth(0),
     ph_passEleVeto(0),
+    ph_passEleVetoSupercluster(0),
+    ph_passEleVetoMissingHits(0),
+    ph_passEleVetoConversion(0),
     ph_hasPixSeed(0),
     ph_sc_rawE(0),
     ph_ecalIso(0),
@@ -95,6 +98,9 @@ void PhotonProducer::initialize( const std::string &prefix,
         tree->Branch( (prefix + "_phiWidth").c_str(), &ph_phiWidth );
 
         tree->Branch( (prefix + "_passEleVeto").c_str(), &ph_passEleVeto  );
+        tree->Branch( (prefix + "_passEleVetoSupercluster").c_str(), &ph_passEleVetoSupercluster  );
+        tree->Branch( (prefix + "_passEleVetoMissingHits").c_str(), &ph_passEleVetoMissingHits  );
+        tree->Branch( (prefix + "_passEleVetoConversion").c_str(), &ph_passEleVetoConversion  );
         tree->Branch( (prefix + "_hasPixSeed").c_str(), &ph_hasPixSeed  );
 
         if( detail > 1 ) {
@@ -234,6 +240,9 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
         ph_phiWidth->clear();
 
         ph_passEleVeto ->clear();
+        ph_passEleVetoSupercluster ->clear();
+        ph_passEleVetoMissingHits ->clear();
+        ph_passEleVetoConversion ->clear();
         ph_hasPixSeed ->clear();
 
         if( _detail > 1 ) {
@@ -337,6 +346,9 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
             ph_phiWidth->push_back(ph->superCluster()->phiWidth());
 
             ph_passEleVeto -> push_back (ph->passElectronVeto());
+            ph_passEleVetoSupercluster -> push_back (ph->passElectronVetoSupercluster());
+            ph_passEleVetoMissingHits -> push_back (ph->passElectronVetoMissingHits());
+            ph_passEleVetoConversion -> push_back (ph->passElectronVetoConversion());
             ph_hasPixSeed -> push_back( ph->hasPixelSeed());
 
             if( _detail > 1 ) {

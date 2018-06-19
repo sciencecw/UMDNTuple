@@ -76,6 +76,9 @@ class PhotonProducer {
         std::vector<float> *ph_etaWidth;
         std::vector<float> *ph_phiWidth;
         std::vector<Bool_t> *ph_passEleVeto;
+        std::vector<Bool_t> *ph_passEleVetoSupercluster;
+        std::vector<Bool_t> *ph_passEleVetoMissingHits;
+        std::vector<Bool_t> *ph_passEleVetoConversion;
         std::vector<Bool_t> *ph_hasPixSeed;
         std::vector<float> *ph_sc_rawE;
         std::vector<float> *ph_ecalIso;
