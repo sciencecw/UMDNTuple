@@ -16,10 +16,11 @@ class METFilterProducer {
         //void initialize( const TTree *tree );
         void initialize( const std::string &prefix, 
                          const edm::EDGetTokenT<edm::TriggerResults >&, 
-                         TTree * );
+                         const std::vector<std::string> &,
+                         TTree *, TTree* );
 
         void produce(const edm::Event &iEvent );
-        void endRun( ) {};
+        void endRun( );
 
 
     private :
@@ -28,6 +29,12 @@ class METFilterProducer {
 
         edm::EDGetTokenT<edm::TriggerResults> _filterToken;
 
+        std::map<std::string, int> _filter_map;
+        std::vector<std::pair<int, int> > _filter_idx_map;
+
+        std::vector<int> *_passing_filters;
+
+        TTree *_infoTree;
 
 };
 #endif

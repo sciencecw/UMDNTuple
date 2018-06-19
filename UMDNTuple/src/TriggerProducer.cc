@@ -26,7 +26,6 @@ void TriggerProducer::initialize( const std::string &prefix,
     _trigObjToken = trigObjTok;
     _infoTree = infoTree;
 
-    //tree->Branch("triggerBits", &triggerBits, "triggerBits/l" );
     tree->Branch("passedTriggers", &_passing_triggers );
 
     tree->Branch("HLTObj_n"  , &HLTObj_n, "HLTObj_n/I");
@@ -36,6 +35,9 @@ void TriggerProducer::initialize( const std::string &prefix,
     tree->Branch("HLTObj_e"  , &HLTObj_e );
     tree->Branch("HLTObj_passTriggers"  , &HLTObj_passTriggers );
 
+    _trigger_idx_map.clear();
+    _trigger_map.clear();
+       
     for( std::vector<std::string>::const_iterator itr = trigMap.begin();
             itr != trigMap.end(); ++itr ) {
         int trig_idx;
@@ -51,6 +53,7 @@ void TriggerProducer::initialize( const std::string &prefix,
         _trigger_map[trig_name] = trig_idx;
 
     }
+
 
 }
 
@@ -139,72 +142,6 @@ void TriggerProducer::produce(const edm::Event &iEvent ) {
         }
 
     }
-        //std::vector<std::string> pathNamesAll = obj.pathNames(false);
-
-
-    //triggerBits = 0;
-
-    //if( _trigger_indices.size() == 0 ) {
-
-    //    edm::RefProd<edm::TriggerNames> trigNames( &(iEvent.triggerNames( *triggers )) );
-
-    //    unsigned itrig = 0;
-    //    for (unsigned i = 0; i < trigNames->size(); i++) {
-
-    //        std::string trigname = trigNames->triggerName(i);
-    //        if( trigname.substr(0,4) != "HLT_" ) continue;
-
-    //        _trigger_indices.push_back( i );
-
-    //        std::cout << trigname << std::endl;
-
-    //        if( _trigger_indices.size() >= 64 ) break;
-
-    //    }
-
-    //}
-
-    //std::cout << "Event" << std::endl;
-    //for( unsigned idx = 0; idx < _trigger_indices.size(); ++idx ) {
-
-    //    if( triggers->accept(_trigger_indices[idx]) ) {
-    //        std::cout << "Accept " << idx << std::endl;
-    //        std::cout << std::bitset<64>(1 << idx) << std::endl;
-
-    //        triggerBits |= (1 << idx);
-    //    }
-    //}
-
-    //std::cout << std::bitset<64>(triggerBits) << std::endl;
-
-
-
-
-    //if( _result_map.size() == 0 ) {
-
-    //    edm::RefProd<edm::TriggerNames> trigNames( &(iEvent.triggerNames( *triggers )) );
-
-    //    for (unsigned i = 0; i < trigNames->size(); i++) {
-
-    //        std::string trigname = trigNames->triggerName(i);
-
-    //        if( trigname.substr(0,4) == "HLT_" ) {
-    //            _result_map[i] = 0;
-    //            _tree->Branch( trigname.c_str(), &_result_map[i], (trigname + "/O").c_str() );
-    //        }
-    //        //if( _result_map.size() >= 64 ) {
-    //        //    break;
-    //        //}
-
-    //    }
-
-    //}
-
-    //for( std::map<int, bool>::iterator itr = _result_map.begin();
-    //        itr != _result_map.end(); ++itr ) {
-
-    //    itr->second = triggers->accept(itr->first);
-    //}
 
 }
 

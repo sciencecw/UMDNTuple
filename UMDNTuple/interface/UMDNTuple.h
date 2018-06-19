@@ -49,6 +49,7 @@ private :
   TTree *_myTree;
   TTree *_weightInfoTree;
   TTree *_trigInfoTree;
+  TTree *_filterInfoTree;
 
   EventInfoProducer  _eventProducer;
   GenParticleProducer  _genProducer;
