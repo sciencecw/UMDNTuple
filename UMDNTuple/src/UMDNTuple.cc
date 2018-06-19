@@ -34,6 +34,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     _weightInfoTree = fs->make<TTree>( "WeightInfoTree", "WeightInfoTree" );
     // Create tree to store metadata
     _trigInfoTree = fs->make<TTree>( "TrigInfoTree", "TrigInfoTree" );
+    _filterInfoTree = fs->make<TTree>( "FilterInfoTree", "FilterInfoTree" );
 
     // get the detail levels from the configuration
     int elecDetail = 99;
@@ -194,7 +195,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     // Event information
     _eventProducer.initialize( verticesToken, puToken, 
                                generatorToken, lheEventToken, lheRunToken,
-                               rhoToken, _myTree, _trigInfoTree, _isMC );
+                               rhoToken, _myTree, _weightInfoTree, _isMC );
 
     // Electrons
     if( _produceElecs ) {
@@ -311,7 +312,11 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
         metFilterToken = consumes<edm::TriggerResults>(
                     iConfig.getUntrackedParameter<edm::InputTag>("metFilterTag"));
 
-        _metFilterProducer .initialize( prefix_met_filter      , metFilterToken , _myTree );
+        std::vector<std::string> filter_map = 
+            iConfig.getUntrackedParameter<std::vector<std::string> >("metFilterMap");
+
+        _metFilterProducer .initialize( prefix_met_filter , metFilterToken , 
+                                        filter_map, _myTree, _filterInfoTree );
     }
     if( _produceTrig ) {
         trigToken = consumes<edm::TriggerResults>(
@@ -374,6 +379,7 @@ void UMDNTuple::endJob() {
 void UMDNTuple::endRun( edm::Run const& iRun, edm::EventSetup const&) {
 
   _eventProducer.endRun( iRun );
+  _metFilterProducer.endRun();
   _trigProducer.endRun();
 
 

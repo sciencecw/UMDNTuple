@@ -26,6 +26,29 @@ opt.nEvents = 1000
 
 opt.parseArguments()
 
+process.source = cms.Source("PoolSource",
+                            fileNames =  cms.untracked.vstring(opt.inputFiles))
+
+# try to determine if its data or MC based on the name
+# otherwise request the user to provide isMC=
+if opt.isMC < 0 and len(process.source.fileNames) > 0:
+  if re.match(r'.*/(MINI)?AODSIM/.*', process.source.fileNames[0]):
+    print "MC dataset detected."
+    opt.isMC = 1
+  elif re.match(r'.*/(MINI)?AOD/.*', process.source.fileNames[0]):
+    print "Real data dataset detected."
+    opt.isMC = 0
+
+if opt.isMC < 0:
+  raise Exception("Failed to detect data type. Data type need to be specify with the isMC cmsRun command line option")
+
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(opt.nEvents))
+#process.source.skipEvents = cms.untracked.uint32(1000)
+process.source.duplicateCheckMode = cms.untracked.string('noDuplicateCheck') 
+
+process.TFileService = cms.Service("TFileService",
+                                   fileName = cms.string('ntuple.root' )
+)
 
 
 #-----------------------------------------------------
@@ -70,31 +93,9 @@ if opt.isMC == 1:
 else:
   process.GlobalTag = GlobalTag(process.GlobalTag, dataGlobalTag, '')
 
-process.source = cms.Source("PoolSource",
-                            fileNames =  cms.untracked.vstring(opt.inputFiles))
 
 #------------------------------------
 
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(opt.nEvents))
-#process.source.skipEvents = cms.untracked.uint32(1000)
-process.source.duplicateCheckMode = cms.untracked.string('noDuplicateCheck') 
-
-process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string('ntuple.root' )
-)
-
-# try to determine if its data or MC based on the name
-# otherwise request the user to provide isMC=
-if opt.isMC < 0 and len(process.source.fileNames) > 0:
-  if re.match(r'.*/(MINI)?AODSIM/.*', process.source.fileNames[0]):
-    print "MC dataset detected."
-    opt.isMC = 1
-  elif re.match(r'.*/(MINI)?AOD/.*', process.source.fileNames[0]):
-    print "Real data dataset detected."
-    opt.isMC = 0
-
-if opt.isMC < 0:
-  raise Exception("Failed to detect data type. Data type need to be specify with the isMC cmsRun command line option")
 
 # Photon and electron correction
 process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
@@ -320,7 +321,29 @@ trigger_map = cms.untracked.vstring(
     '260:HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95',
     '261:HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55',
     '262:HLT_Photon42_R9Id85_OR_CaloId24b40e_Iso50T80L_Photon25_AND_HE10_R9Id65_Eta2_Mass15',
-    ) 
+    )
+filter_map = cms.untracked.vstring( 
+    '1:Flag_HBHENoiseFilter',
+    '2:Flag_HBHENoiseIsoFilter',
+    '3:Flag_CSCTightHaloFilter',
+    '4:Flag_CSCTightHaloTrkMuUnvetoFilter',
+    '5:Flag_CSCTightHalo2015Filter',
+    '6:Flag_globalTightHalo2016Filter',
+    '7:Flag_globalSuperTightHalo2016Filter',
+    '8:Flag_HcalStripHaloFilter',
+    '9:Flag_hcalLaserEventFilter',
+    '10:Flag_EcalDeadCellTriggerPrimitiveFilter',
+    '11:Flag_EcalDeadCellBoundaryEnergyFilter',
+    '12:Flag_goodVertices',
+    '13:Flag_eeBadScFilter',
+    '14:Flag_ecalLaserCorrFilter',
+    '15:Flag_trkPOGFilters',
+    '16:Flag_chargedHadronTrackResolutionFilter',
+    '17:Flag_muonBadTrackFilter',
+    '18:Flag_trkPOG_manystripclus53X',
+    '19:Flag_trkPOG_toomanystripclus53X',
+    '20:Flag_trkPOG_logErrorTooManyClusters',
+)
 
 
 process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
@@ -344,10 +367,11 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     jetTag     = cms.untracked.InputTag('slimmedJets'),
     fatjetTag     = cms.untracked.InputTag('slimmedJetsAK8'),
     metTag     = cms.untracked.InputTag('slimmedMETs'),
-    metFilterTag  = cms.untracked.InputTag('TriggerResults', '', 'PAT'),
     triggerTag  = cms.untracked.InputTag('TriggerResults', '', 'HLT'),
     triggerObjTag = cms.untracked.InputTag('selectedPatTrigger'),
     triggerMap = trigger_map,
+    metFilterTag  = cms.untracked.InputTag('TriggerResults', '', 'PAT'),
+    metFilterMap = filter_map,
 
     beamSpotTag = cms.untracked.InputTag('offlineBeamSpot'),
     conversionsTag = cms.untracked.InputTag('reducedEgamma', 'reducedConversions' ),
