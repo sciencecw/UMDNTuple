@@ -10,6 +10,7 @@ opt = VarParsing.VarParsing ('analysis')
 
 opt.register('isMC', -1, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, 'Flag indicating if the input samples are from MC (1) or from the detector (0).')
 opt.register('nEvents', 1000, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, 'Number of events to analyze')
+opt.register('disableEventWeights', 0, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.bool, 'Set to 1 to disable event weights')
 
 #input files. Can be changed on the command line with the option inputFiles=...
 opt.inputFiles = [
@@ -21,8 +22,9 @@ opt.inputFiles = [
 ]
 
 
-#default number of exvents
+#defaults
 opt.nEvents = 1000
+opt.disableEventWeights = 0
 
 opt.parseArguments()
 
@@ -55,7 +57,7 @@ process.TFileService = cms.Service("TFileService",
 # Configure message logger
 #-----------------------------------------------------
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 100
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 #process.MessageLogger.suppressWarning = cms.untracked.vstring('ecalLaserCorrFilter','manystripclus53X','toomanystripclus53X')
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 #process.options.allowUnscheduled = cms.untracked.bool(True)
@@ -343,6 +345,9 @@ filter_map = cms.untracked.vstring(
     '18:Flag_trkPOG_manystripclus53X',
     '19:Flag_trkPOG_toomanystripclus53X',
     '20:Flag_trkPOG_logErrorTooManyClusters',
+    # these are added 'manually' because they are not availbe in the miniAOD
+    '100:Flag_BadChargedCandidateFilter',
+    '101:Flag_BadPFMuonFilter',
 )
 
 
@@ -371,6 +376,8 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     triggerObjTag = cms.untracked.InputTag('selectedPatTrigger'),
     triggerMap = trigger_map,
     metFilterTag  = cms.untracked.InputTag('TriggerResults', '', 'PAT'),
+    BadChargedCandidateFilter = cms.untracked.InputTag('BadChargedCandidateFilter'),
+    BadPFMuonFilter = cms.untracked.InputTag('BadPFMuonFilter'),
     metFilterMap = filter_map,
 
     beamSpotTag = cms.untracked.InputTag('offlineBeamSpot'),
@@ -389,7 +396,7 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     muonDetailLevel = cms.untracked.int32( 1 ),
     jetDetailLevel = cms.untracked.int32( 1 ),
     isMC = cms.untracked.int32( opt.isMC ),
-
+    disableEventWeights = cms.untracked.bool( opt.disableEventWeights ),
     prefix_el   = cms.untracked.string("el"),
     prefix_mu   = cms.untracked.string("mu"),
     prefix_ph   = cms.untracked.string("ph"),

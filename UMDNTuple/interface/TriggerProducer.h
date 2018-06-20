@@ -54,6 +54,8 @@ class TriggerProducer {
 
         TTree *_infoTree;
 
+        int _prevRunNumber;
+
 
 };
 #endif

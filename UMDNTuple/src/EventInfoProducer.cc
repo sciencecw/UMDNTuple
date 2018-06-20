@@ -15,7 +15,8 @@ EventInfoProducer::EventInfoProducer(  ) :
     EventWeights(0),
     rho(0),
     _infoTree(0),
-    _isMC(0)
+    _isMC(0),
+    _disableEventWeights(0)
 
 {
 
@@ -40,10 +41,10 @@ void EventInfoProducer::initialize(
 
 
     tree -> Branch( "isData", &isData, "isData/O" );
-    tree -> Branch( "eventNumber", &eventNumber, "eventNumber/I");
-    tree -> Branch( "lumiSection", &lumiSection, "lumiSection/I");
-    tree -> Branch( "runNumber", &runNumber, "runNumber/I");
-    tree -> Branch( "bxNumber", &bxNumber, "bxNumber/I");
+    tree -> Branch( "eventNumber", &eventNumber, "eventNumber/i");
+    tree -> Branch( "lumiSection", &lumiSection, "lumiSection/i");
+    tree -> Branch( "runNumber", &runNumber, "runNumber/i");
+    tree -> Branch( "bxNumber", &bxNumber, "bxNumber/i");
     tree -> Branch( "vtx_n", &vtx_n, "vtx_n/I");
     tree -> Branch( "pu_n", &pu_n, "pu_n/I");
     tree -> Branch( "rho", &rho, "rho/F");
@@ -106,9 +107,6 @@ void EventInfoProducer::produce(const edm::Event &iEvent ) {
         edm::Handle<GenEventInfoProduct> generator_h;
         iEvent.getByToken(_generatorToken, generator_h);
 
-        edm::Handle<LHEEventProduct>   lheevent_h;
-        iEvent.getByToken(_lheEventToken, lheevent_h);
-
         std::vector<PileupSummaryInfo>::const_iterator PVI;
         float nputrue=-1.;
         float npu=-1.;
@@ -125,8 +123,13 @@ void EventInfoProducer::produce(const edm::Event &iEvent ) {
         pu_n     = npu;
         truepu_n = nputrue;
 
-        for(unsigned iw = 0; iw < lheevent_h->weights().size(); ++iw){
-            EventWeights->push_back(lheevent_h->weights()[iw].wgt);
+        if( !_disableEventWeights ) {
+            edm::Handle<LHEEventProduct>   lheevent_h;
+            iEvent.getByToken(_lheEventToken, lheevent_h);
+
+            for(unsigned iw = 0; iw < lheevent_h->weights().size(); ++iw){
+                EventWeights->push_back(lheevent_h->weights()[iw].wgt);
+            }
         }
 
         if (generator_h->pdf()) {
@@ -143,7 +146,9 @@ void EventInfoProducer::produce(const edm::Event &iEvent ) {
 
 void EventInfoProducer::endRun( const edm::Run & iRun ) {
 
+    // Don't save this info if this is Data or if it wasn't requested
     if( !_isMC ) return;
+    if( _disableEventWeights ) return;
 
     edm::Handle<LHERunInfoProduct>   lherun_h;
     iRun.getByToken(_lheRunToken, lherun_h);

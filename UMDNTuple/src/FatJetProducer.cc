@@ -38,7 +38,7 @@ void FatJetProducer::initialize( const std::string &prefix,
     tree->Branch( (prefix + "_ak08_Puppi_tau2" ).c_str(), &jet_ak08_Puppi_tau2 );
     tree->Branch( (prefix + "_ak08_Puppi_tau3" ).c_str(), &jet_ak08_Puppi_tau3 );
 
-    _jetProducer.initialize( prefix, jetTok, tree, 1 );
+    _jetProducer.initialize( prefix, jetTok, tree, 0 );
 
 
 

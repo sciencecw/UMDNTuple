@@ -28,6 +28,10 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
 
     _isMC = iConfig.getUntrackedParameter<int>("isMC");
 
+    bool disableEventWeights = false;
+    if( iConfig.exists("disableEventWeights" ) ) {
+        disableEventWeights = iConfig.getUntrackedParameter<bool>("disableEventWeights");
+    }
     // Create tree to store event data
     _myTree = fs->make<TTree>( "EventTree", "EventTree" );
     // Create tree to store metadata
@@ -197,6 +201,9 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
                                generatorToken, lheEventToken, lheRunToken,
                                rhoToken, _myTree, _weightInfoTree, _isMC );
 
+    if(disableEventWeights ) {
+        _eventProducer.disableEventWeights();
+    }
     // Electrons
     if( _produceElecs ) {
         elecToken =  consumes<edm::View<pat::Electron> >(
@@ -282,7 +289,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
         _photProducer.addUserBool( PhotonVIDMedium     , phoIdMediumToken );
         _photProducer.addUserBool( PhotonVIDTight      , phoIdTightToken );
 
-        _photProducer.addElectronsToken( elecToken );
+        //_photProducer.addElectronsToken( elecToken );
         _photProducer.addConversionsToken( conversionsToken );
         _photProducer.addBeamSpotToken( beamSpotToken );
         _photProducer.addCalibratedToken( photCalibToken );
@@ -312,11 +319,20 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
         metFilterToken = consumes<edm::TriggerResults>(
                     iConfig.getUntrackedParameter<edm::InputTag>("metFilterTag"));
 
+        edm::EDGetTokenT<bool> BadChCandFilterToken = 
+            consumes<bool>(iConfig.getUntrackedParameter<edm::InputTag>("BadChargedCandidateFilter"));
+
+        edm::EDGetTokenT<bool> BadPFMuonFilterToken = 
+            consumes<bool>(iConfig.getUntrackedParameter<edm::InputTag>("BadPFMuonFilter"));
+
         std::vector<std::string> filter_map = 
             iConfig.getUntrackedParameter<std::vector<std::string> >("metFilterMap");
 
         _metFilterProducer .initialize( prefix_met_filter , metFilterToken , 
                                         filter_map, _myTree, _filterInfoTree );
+
+        _metFilterProducer.addBadChargedCandidateFilterToken( BadChCandFilterToken );
+        _metFilterProducer.addBadPFMuonFilterToken( BadPFMuonFilterToken );
     }
     if( _produceTrig ) {
         trigToken = consumes<edm::TriggerResults>(
@@ -340,12 +356,6 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
         _genProducer.initialize( prefix_gen       , genToken, _myTree, genMinPt );
     }
 
-    //edm::Handle< edm::TriggerResults> HLTtriggers;
-    //edm::EDGetTokenT<edm::TriggerResults> HLTTagToken_;
-
-    //iEvent.getByToken(HLTTagToken_, HLTtriggers);          
-    //iEvent.getByToken(triggerObjsToken_, triggerObjects);
-
 }
 
 void UMDNTuple::beginJob() {
@@ -367,12 +377,9 @@ void UMDNTuple::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     if( _produceGen && _isMC  ) _genProducer       .produce( iEvent );
 
     _myTree->Fill();
-
 }
 
 void UMDNTuple::endJob() {
-
-    //_myTree->Write();
 
 }
 

@@ -193,9 +193,9 @@ void PhotonProducer::addConversionsToken( const edm::EDGetTokenT<reco::Conversio
 void PhotonProducer::addBeamSpotToken( const edm::EDGetTokenT<reco::BeamSpot> & tok) {
     _beamSpotToken= tok;
 }
-void PhotonProducer::addElectronsToken( const edm::EDGetTokenT<edm::View<pat::Electron> > & tok) {
-    _ElectronsToken = tok;
-}
+//void PhotonProducer::addElectronsToken( const edm::EDGetTokenT<edm::View<pat::Electron> > & tok) {
+//    _ElectronsToken = tok;
+//}
 void PhotonProducer::addCalibratedToken( const edm::EDGetTokenT<edm::View<pat::Photon> > & tok) {
     _photCalibToken = tok;
 }
@@ -281,8 +281,8 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
     iEvent.getByToken( _NeuIsoToken , ph_neuIso_h );
     iEvent.getByToken( _PhoIsoToken , ph_phoIso_h );
 
-    edm::Handle<edm::View<pat::Electron> > electrons_h;
-    iEvent.getByToken(_ElectronsToken, electrons_h);
+    //edm::Handle<edm::View<pat::Electron> > electrons_h;
+    //iEvent.getByToken(_ElectronsToken, electrons_h);
 
     edm::Handle<reco::ConversionCollection> conversions_h;
     iEvent.getByToken(_ConversionsToken, conversions_h);
