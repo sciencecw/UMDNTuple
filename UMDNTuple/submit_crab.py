@@ -1,12 +1,21 @@
 
 import os
+import getpass
+USER=getpass.getuser()
+import socket
+HOST=socket.gethostname()
 from argparse import ArgumentParser
 
 p = ArgumentParser()
 
 p.add_argument('--version', dest='version', required=True, help='version' )
+p.add_argument('--outputPath', dest='outputPath', default='/store/user/%s' %USER, help='output path on storage site, default=/store/user/%s' %USER )
+p.add_argument('--site', dest='site', default='T3_US_UMD', help='destination site, default=T3_US_UMD' )
 
 options = p.parse_args()
+
+
+
 
 data_samples = [ 
     #'/SingleElectron/Run2016B-23Sep2016-v2/MINIAOD',
@@ -32,6 +41,9 @@ data_samples = [
 ]
 
 mc_samples = [
+    # list of MC sample
+    # The first arugment is the DAS path for the dataset
+    # The second argument controls if the EventWeights are saved (removing them saves disk space)
     ##('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/MINIAODSIM', False ),
     #('/DiPhotonJets_MGG-80toInf_13TeV_amcatnloFXFX_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
     ##('/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
@@ -245,11 +257,19 @@ for path, useEventWeights in mc_samples:
 
     submit_commands.append( 'crab submit --config %s' %( fname ) )
 
-submit_file = open('submit_crab.csh', 'w' )
+if HOST.count('umd.edu') :
+    submit_file = open('submit_crab.csh', 'w' )
+    
+    submit_file.write( '#!/bin/tcsh\n' )
+    submit_file.write( 'cmsenv\n' )
+    submit_file.write( 'source /cvmfs/cms.cern.ch/crab3/crab.csh\n' )
+else : # assume we use bash everywhere else
+    submit_file = open('submit_crab.sh', 'w' )
+    
+    submit_file.write( '#!/bin/bash\n' )
+    submit_file.write( 'cmsenv\n' )
+    submit_file.write( 'source /cvmfs/cms.cern.ch/crab3/crab.sh\n' )
 
-submit_file.write( '#!/bin/tcsh\n' )
-submit_file.write( 'cmsenv\n' )
-submit_file.write( 'source /cvmfs/cms.cern.ch/crab3/crab.csh\n' )
 
 for cmd in submit_commands :
     submit_file.write(cmd + '\n' )
@@ -258,7 +278,3 @@ for cmd in submit_commands :
 submit_file.close()
 
                        
-
-
-
-
