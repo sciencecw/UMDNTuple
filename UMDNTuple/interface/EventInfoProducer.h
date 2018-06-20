@@ -25,6 +25,7 @@ class EventInfoProducer {
                         const edm::EDGetTokenT<LHERunInfoProduct> & , 
                         const edm::EDGetTokenT<double> & , TTree *, TTree *, bool);
 
+        void disableEventWeights() {_disableEventWeights=true;}
         void produce(const edm::Event &iEvent );
 
         void endRun( const edm::Run & );
@@ -33,10 +34,10 @@ class EventInfoProducer {
     private :
 
         Bool_t isData;
-        int eventNumber;
-        int lumiSection;
-        int runNumber;
-        int bxNumber;
+        unsigned eventNumber;
+        unsigned lumiSection;
+        unsigned runNumber;
+        unsigned bxNumber;
         int vtx_n;
         int pu_n;
         int truepu_n;
@@ -58,5 +59,6 @@ class EventInfoProducer {
 
         TTree * _infoTree;
         bool _isMC;
+        bool _disableEventWeights;
 };
 #endif

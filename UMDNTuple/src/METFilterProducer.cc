@@ -43,6 +43,12 @@ void METFilterProducer::initialize( const std::string &prefix,
 
 }
 
+void METFilterProducer::addBadChargedCandidateFilterToken( const edm::EDGetTokenT<bool> & tok)  { 
+    _BadChCandFilterToken = tok;
+}
+void METFilterProducer::addBadPFMuonFilterToken( const edm::EDGetTokenT<bool> & tok)  { 
+    _BadPFMuonFilterToken = tok;
+}
 
 void METFilterProducer::produce(const edm::Event &iEvent ) {
 
@@ -67,7 +73,6 @@ void METFilterProducer::produce(const edm::Event &iEvent ) {
             std::map<std::string, int>::const_iterator mitr = _filter_map.find(filtname);
 
             if( mitr != _filter_map.end() ) {
-                std::cout << "Add to filter " << mitr->first << std::endl;
                 _filter_idx_map.push_back( std::make_pair(i, mitr->second) );
             }
         }
@@ -77,6 +82,22 @@ void METFilterProducer::produce(const edm::Event &iEvent ) {
             mitr != _filter_idx_map.end(); ++mitr ) {
         if( filters->accept( mitr->first ) ) {
             _passing_filters->push_back( mitr->second );
+        }
+    }
+
+    // now handle the manually added filters
+    // check that they were requested in the list and get the ID
+    for( std::map<std::string,int>::const_iterator mitr = _filter_map.begin();
+            mitr != _filter_map.end(); ++mitr ) {
+        if( mitr->first == "Flag_BadChargedCandidateFilter" ) {
+            edm::Handle<bool> ifilterbadChCand;
+            iEvent.getByToken(_BadChCandFilterToken, ifilterbadChCand);
+            if( *ifilterbadChCand ) _passing_filters->push_back( mitr->second );
+        }
+        if( mitr->first == "Flag_BadPFMuonFilter" ) {
+            edm::Handle<bool> ifilterbadPFMuon;
+            iEvent.getByToken(_BadPFMuonFilterToken, ifilterbadPFMuon);
+            if( *ifilterbadPFMuon ) _passing_filters->push_back( mitr->second );
         }
     }
 

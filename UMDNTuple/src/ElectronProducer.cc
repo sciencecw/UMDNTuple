@@ -255,7 +255,6 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
     for (unsigned int j=0; j < electrons->size();++j){
         edm::Ptr<pat::Electron> el = electrons->ptrAt(j);
         edm::Ptr<pat::Electron> calibEl = calibElectrons->ptrAt(j);
-        //const pat::Electron & el = (*elptr);
  
         if( el->pt() < _minPt ) continue;
 

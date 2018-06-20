@@ -63,7 +63,7 @@ void GenParticleProducer::produce(const edm::Event &iEvent ) {
 
     for (unsigned int j=0; j < genParticles->size();++j){
         reco::GenParticle gen = genParticles->at(j);
- 
+
         if( gen.pt() < _minPt ) continue;
 
         gen_n++;
