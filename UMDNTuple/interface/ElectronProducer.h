@@ -30,13 +30,14 @@ class ElectronProducer {
                          const edm::EDGetTokenT<edm::View<pat::Electron> >&elecTok, 
                          TTree *tree, float minPt=5, int detail=99 );
 
-        void addUserBool ( ElectronUserVar , const edm::EDGetTokenT<edm::ValueMap<Bool_t> > & );
+        //void addUserBool ( ElectronUserVar , const edm::EDGetTokenT<edm::ValueMap<Bool_t> > & );
+        void addUserString( ElectronUserVar type, const std::string userString ) ;
 
         void addConversionsToken( const edm::EDGetTokenT<reco::ConversionCollection> & );
         void addBeamSpotToken( const edm::EDGetTokenT<reco::BeamSpot> & );
         void addVertexToken( const edm::EDGetTokenT<std::vector<reco::Vertex> > & );
         void addRhoToken( const edm::EDGetTokenT<double> & );
-        void addCalibratedToken( const edm::EDGetTokenT<edm::View<pat::Electron> > & );
+        void addEnergyCalib( const std::string eneCalib) ;
 
         void produce(const edm::Event &iEvent );
 
@@ -98,17 +99,18 @@ class ElectronProducer {
 
 
         edm::EDGetTokenT<edm::View<pat::Electron> > _elecToken;
-        edm::EDGetTokenT<edm::View<pat::Electron> > _elecCalibToken;
 
         edm::EDGetTokenT<reco::BeamSpot> _beamSpotToken;
         edm::EDGetTokenT<reco::ConversionCollection> _conversionsToken;
 
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > _IdVeryLooseToken;
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > _IdLooseToken;
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > _IdMediumToken;
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > _IdTightToken;
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > _IdHEEPToken;
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > _IdHLTToken;
+        std::string _IdVeryLoose;
+        std::string _IdLoose;
+        std::string _IdMedium;
+        std::string _IdTight;
+        std::string _IdHLT;
+        std::string _IdHEEP;
+
+        std::string _eneCalib;
 
         edm::EDGetTokenT<std::vector<reco::Vertex> > _vertexToken;
         edm::EDGetTokenT<double> _rhoToken;

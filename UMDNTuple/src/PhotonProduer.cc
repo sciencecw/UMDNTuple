@@ -196,9 +196,9 @@ void PhotonProducer::addBeamSpotToken( const edm::EDGetTokenT<reco::BeamSpot> & 
 //void PhotonProducer::addElectronsToken( const edm::EDGetTokenT<edm::View<pat::Electron> > & tok) {
 //    _ElectronsToken = tok;
 //}
-void PhotonProducer::addCalibratedToken( const edm::EDGetTokenT<edm::View<pat::Photon> > & tok) {
-    _photCalibToken = tok;
-}
+//void PhotonProducer::addCalibratedToken( const edm::EDGetTokenT<edm::View<pat::Photon> > & tok) {
+//    _photCalibToken = tok;
+//}
 
 void PhotonProducer::produce(const edm::Event &iEvent ) {
 
@@ -262,8 +262,8 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
     edm::Handle<edm::View<pat::Photon> > photons;
     iEvent.getByToken(_photToken,photons);
 
-    edm::Handle<edm::View<pat::Photon> > calibPhotons;
-    iEvent.getByToken(_photCalibToken,calibPhotons);
+    //edm::Handle<edm::View<pat::Photon> > calibPhotons;
+    //iEvent.getByToken(_photCalibToken,calibPhotons);
 
     edm::Handle<edm::ValueMap<Bool_t> > ph_passVIDLoose_h;
     edm::Handle<edm::ValueMap<Bool_t> > ph_passVIDMedium_h;
@@ -296,7 +296,7 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
 
     for (unsigned int j=0; j < photons->size();++j){
         edm::Ptr<pat::Photon> ph = photons->ptrAt(j);
-        edm::Ptr<pat::Photon> calibPh = calibPhotons->ptrAt(j);
+        //edm::Ptr<pat::Photon> calibPh = calibPhotons->ptrAt(j);
         // Need to implemnet calibrations
         //edm::Ptr<pat::Photon> calib_phptr = calibrated_photons->ptrAt(j);
  
@@ -306,10 +306,10 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
 
         ph_n += 1;
 
-        ph_pt      -> push_back( calibPh->pt() );
-        ph_eta     -> push_back( calibPh->eta() );
-        ph_phi     -> push_back( calibPh->phi() );
-        ph_e       -> push_back( calibPh->energy() );
+        //ph_pt      -> push_back( calibPh->pt() );
+        //ph_eta     -> push_back( calibPh->eta() );
+        //ph_phi     -> push_back( calibPh->phi() );
+        //ph_e       -> push_back( calibPh->energy() );
         ph_ptOrig  -> push_back( ph->pt() );
         ph_etaOrig -> push_back( ph->eta() );
         ph_phiOrig -> push_back( ph->phi() );
