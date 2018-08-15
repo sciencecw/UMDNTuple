@@ -8,6 +8,7 @@
 
 #include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
+#include "RecoEgamma/EgammaTools/interface/EffectiveAreas.h"
 
 enum ElectronUserVar {
 
@@ -96,12 +97,7 @@ class ElectronProducer {
         std::vector<float> *el_hcalTowerSumEt;
 
 
-
-
         edm::EDGetTokenT<edm::View<pat::Electron> > _elecToken;
-
-        edm::EDGetTokenT<reco::BeamSpot> _beamSpotToken;
-        edm::EDGetTokenT<reco::ConversionCollection> _conversionsToken;
 
         std::string _IdVeryLoose;
         std::string _IdLoose;
@@ -112,6 +108,10 @@ class ElectronProducer {
 
         std::string _eneCalib;
 
+        EffectiveAreas _effectiveAreas;
+
+        edm::EDGetTokenT<reco::ConversionCollection> _conversionsToken;
+        edm::EDGetTokenT<reco::BeamSpot> _beamSpotToken;
         edm::EDGetTokenT<std::vector<reco::Vertex> > _vertexToken;
         edm::EDGetTokenT<double> _rhoToken;
 

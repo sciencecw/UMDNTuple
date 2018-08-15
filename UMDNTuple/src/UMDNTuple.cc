@@ -12,7 +12,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     _produceElecs(true),
     //_produceMuons(true),
     _produceMuons(false),
-    _producePhots(false),
+    _producePhots(true),
     //_produceJets(true),
     //_produceFJets(true),
     _produceJets(false),
@@ -261,39 +261,30 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
 
         photToken = consumes<edm::View<pat::Photon> >(
                     iConfig.getUntrackedParameter<edm::InputTag>("photonTag"));
-        //photCalibToken = consumes<edm::View<pat::Photon> >(
-        //            iConfig.getUntrackedParameter<edm::InputTag>("photonCalibTag"));
-        edm::EDGetTokenT<edm::ValueMap<float> > phoChIsoToken = 
-                    consumes<edm::ValueMap<float> >(
-                    iConfig.getUntrackedParameter<edm::InputTag>("phoChIsoTag"));
-        edm::EDGetTokenT<edm::ValueMap<float> > phoNeuIsoToken = 
-                    consumes<edm::ValueMap<float> >(
-                    iConfig.getUntrackedParameter<edm::InputTag>("phoNeuIsoTag"));
-        edm::EDGetTokenT<edm::ValueMap<float> > phoPhoIsoToken = 
-                    consumes<edm::ValueMap<float> >(
-                    iConfig.getUntrackedParameter<edm::InputTag>("phoPhoIsoTag"));
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > phoIdLooseToken = 
-                    consumes<edm::ValueMap<Bool_t> >(
-                    iConfig.getUntrackedParameter<edm::InputTag>("phoIdLooseTag"));
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > phoIdMediumToken = 
-                    consumes<edm::ValueMap<Bool_t> >(
-                    iConfig.getUntrackedParameter<edm::InputTag>("phoIdMediumTag"));
-        edm::EDGetTokenT<edm::ValueMap<Bool_t> > phoIdTightToken = 
-                    consumes<edm::ValueMap<Bool_t> >(
-                    iConfig.getUntrackedParameter<edm::InputTag>("phoIdTightTag"));
 
         _photProducer.initialize( prefix_ph       , photToken, _myTree, photMinPt, photDetail );
-        _photProducer.addUserFloat( PhotonChIso        , phoChIsoToken );
-        _photProducer.addUserFloat( PhotonNeuIso       , phoNeuIsoToken );
-        _photProducer.addUserFloat( PhotonPhoIso       , phoPhoIsoToken );
-        _photProducer.addUserBool( PhotonVIDLoose      , phoIdLooseToken );
-        _photProducer.addUserBool( PhotonVIDMedium     , phoIdMediumToken );
-        _photProducer.addUserBool( PhotonVIDTight      , phoIdTightToken );
+
+        std::string phoChIso  = iConfig.getUntrackedParameter<std::string>("phoChIsoStr");
+        std::string phoNeuIso = iConfig.getUntrackedParameter<std::string>("phoNeuIsoStr");
+        std::string phoPhoIso = iConfig.getUntrackedParameter<std::string>("phoPhoIsoStr");
+        std::string phoIdLoose  = iConfig.getUntrackedParameter<std::string>("phoIdLooseStr");
+        std::string phoIdMedium = iConfig.getUntrackedParameter<std::string>("phoIdMediumStr");
+        std::string phoIdTight  = iConfig.getUntrackedParameter<std::string>("phoIdTightStr");
+
+        _photProducer.addUserString( PhotonChIso        , phoChIso  );
+        _photProducer.addUserString( PhotonNeuIso       , phoNeuIso );
+        _photProducer.addUserString( PhotonPhoIso       , phoPhoIso );
+        _photProducer.addUserString( PhotonVIDLoose      , phoIdLoose  );
+        _photProducer.addUserString( PhotonVIDMedium     , phoIdMedium );
+        _photProducer.addUserString( PhotonVIDTight      , phoIdTight  );
 
         //_photProducer.addElectronsToken( elecToken );
         _photProducer.addConversionsToken( conversionsToken );
         _photProducer.addBeamSpotToken( beamSpotToken );
-        //_photProducer.addCalibratedToken( photCalibToken );
+        _photProducer.addRhoToken( rhoToken );
+
+        std::string phoEneCalib = iConfig.getUntrackedParameter<std::string>("phoEneCalibStr");
+        _photProducer.addEnergyCalib( phoEneCalib );
     }
 
     if( _produceJets ) {

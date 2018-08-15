@@ -1,7 +1,6 @@
 #include "UMDNTuple/UMDNTuple/interface/ElectronProducer.h"
 #include "FWCore/Framework/interface/EDConsumerBase.h"
 #include "FWCore/Framework/interface/Event.h"
-#include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 
 ElectronProducer::ElectronProducer(  ) : 
     el_n(0),
@@ -47,6 +46,7 @@ ElectronProducer::ElectronProducer(  ) :
     el_trkSumPt(0),
     el_ecalRecHitSumEt(0),
     el_hcalTowerSumEt(0),
+    _effectiveAreas("data/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_80X.txt"),
     _detail(99)
 {
 
@@ -60,7 +60,6 @@ void ElectronProducer::initialize( const std::string &prefix,
     _elecToken = elecTok;
     _detail = detail;
     _minPt = minPt;
-
 
     tree->Branch( (prefix + "_n" ).c_str(), &el_n, (prefix + "_n/I" ).c_str() );
 
@@ -232,7 +231,7 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
     const std::string elecIdTight_str     = _IdTight;
     const std::string elecIdHEEP_str      = _IdHEEP;
 
-    const std::string eleEneCalib         = _eneCalib;
+    const std::string eleEneCalib_str     = _eneCalib;
 
     edm::Handle<reco::BeamSpot> beamSpot_h;
     edm::Handle<reco::ConversionCollection> conversions_h;
@@ -259,7 +258,7 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
         el_phiOrig -> push_back( el->phi() );
         el_eOrig -> push_back( el->energy() );
 
-        auto calibp4 = el->p4() * el->userFloat( eleEneCalib )/el->energy() ;
+        auto calibp4 = el->p4() * el->userFloat( eleEneCalib_str )/el->energy() ;
         el_pt ->push_back( calibp4.Pt() );
         el_eta -> push_back( calibp4.Eta() );
         el_phi -> push_back( calibp4.phi() );
@@ -278,12 +277,15 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
             el_hOverE -> push_back( el->hcalOverEcal() );
             el_sigmaIEIE -> push_back(  el->sigmaIetaIeta() );
             el_sigmaIEIEfull5x5 -> push_back( el->full5x5_sigmaIetaIeta() );
+
             // Update the dEtaIn calculate according to 
             // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2#Recipe80X 
             // https://github.com/ikrav/cmssw/blob/egm_id_80X_v1/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDEtaInSeedCut.cc#L30-L33
             el_dEtaIn ->push_back( el->superCluster().isNonnull() && el->superCluster()->seed().isNonnull() ? el->deltaEtaSuperClusterTrackAtVtx() - el->superCluster()->eta() + el->superCluster()->seed()->eta() : std::numeric_limits<float>::max() );
             //el_dEtaIn ->push_back( el->deltaEtaSuperClusterTrackAtVtx());
+
             el_dPhiIn ->push_back( el->deltaPhiSuperClusterTrackAtVtx());
+
             float ooEmooP = -999;
             if( !(el->ecalEnergy() == 0 || !std::isfinite(el->ecalEnergy())) ){
               ooEmooP = fabs(1.0/el->ecalEnergy() - el->eSuperClusterOverP()/el->ecalEnergy() );
@@ -294,6 +296,7 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
             // the isolation might need to be updated. Need to be careful if use this variable
             // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2#Recipe80X
             // https://github.com/ikrav/cmssw/blob/egm_id_80X_v1/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleEffAreaPFIsoCut.cc#L83-L94
+            // checked in MC chIso is not always the same as chadiso. Not sure which one is more appropriate
             float chIso = el->chargedHadronIso();
             float nhIso = el->neutralHadronIso();
             float phIso= el->photonIso();
@@ -301,10 +304,19 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
             el_neuIso->push_back(nhIso);
             el_phoIso->push_back(phIso);
             double rhoPrime = std::max(0., *rho_h);
-            float aeff = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, el->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012);
-            el_aeff->push_back(aeff);
+            //float aeff = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, el->superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012);
+            //el_aeff->push_back(aeff);
+            //el_pfIsoRho->push_back(( chIso + std::max(0.0, nhIso + phIso - rhoPrime*(aeff)) )/ el->pt());
 
-            el_pfIsoRho->push_back(( chIso + std::max(0.0, nhIso + phIso - rhoPrime*(aeff)) )/ el->pt());
+            // from CMSSW code
+            // https://github.com/ikrav/cmssw/blob/egm_id_80X_v1/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleEffAreaPFIsoCut.cc#L83-L94
+            const float chadiso = el->pfIsolationVariables().sumChargedHadronPt;
+            const float nhadiso = el->pfIsolationVariables().sumNeutralHadronEt;
+            const float phoiso  = el->pfIsolationVariables().sumPhotonEt;
+            float eA = _effectiveAreas.getEffectiveArea( fabs(el->superCluster()->eta()) );
+
+            el_aeff->push_back(eA);
+            el_pfIsoRho->push_back(( chadiso + std::max(0.0, nhadiso + phoiso - rhoPrime*(eA)) )/ el->pt());
 
             // vertex displacement
             float d0 = -999;
