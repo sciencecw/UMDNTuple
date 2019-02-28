@@ -75,7 +75,8 @@ class PhotonProducer {
 
         std::vector<float> *ph_sc_eta;
         std::vector<float> *ph_sc_phi;
-        std::vector<float> *ph_hOverE;
+        std::vector<float> *ph_hOverE; 
+        std::vector<float> *ph_hOverE_hdronic;
         std::vector<float> *ph_sigmaIEIE;
         std::vector<float> *ph_sigmaIEIEFull5x5;
         std::vector<float> *ph_r9;

@@ -28,6 +28,7 @@ PhotonProducer::PhotonProducer(  ) :
     ph_sc_eta(0),
     ph_sc_phi(0),
     ph_hOverE(0),
+    ph_hOverE_hdronic(0),
     ph_sigmaIEIE(0),
     ph_sigmaIEIEFull5x5(0),
     ph_r9(0),
@@ -53,9 +54,9 @@ PhotonProducer::PhotonProducer(  ) :
     ph_E2x5Full5x5(0),
     ph_E3x3Full5x5(0),
     ph_E5x5Full5x5(0),
-    _effectiveAreasCH("data/effAreaPhotons_ChargedHadrons_80X.txt"),
-    _effectiveAreasNH("data/effAreaPhotons_NeutralHadrons_80X.txt"),
-    _effectiveAreasPH("data/effAreaPhotons_Photons_80X.txt"),
+    _effectiveAreasCH("src/UMDNTuple/UMDNTuple/data/effAreaPhotons_ChargedHadrons_80X.txt"),
+    _effectiveAreasNH("src/UMDNTuple/UMDNTuple/data/effAreaPhotons_NeutralHadrons_80X.txt"),
+    _effectiveAreasPH("src/UMDNTuple/UMDNTuple/data/effAreaPhotons_Photons_80X.txt"),
     _detail(0),
     _tree(0)
 {
@@ -105,6 +106,7 @@ void PhotonProducer::initialize( const std::string &prefix,
         tree->Branch( (prefix + "_sc_phi").c_str(), &ph_sc_phi );
 
         tree->Branch( (prefix + "_hOverE").c_str(), &ph_hOverE );
+        tree->Branch( (prefix + "_hOverE_hadronic").c_str(), &ph_hOverE_hdronic);
         tree->Branch( (prefix + "_sigmaIEIE").c_str(), &ph_sigmaIEIE );
         tree->Branch( (prefix + "_sigmaIEIEFull5x5").c_str(), &ph_sigmaIEIEFull5x5 );
         tree->Branch( (prefix + "_r9").c_str(), &ph_r9 );
@@ -217,6 +219,7 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
         ph_sc_phi ->clear();
 
         ph_hOverE->clear();
+        ph_hOverE_hdronic->clear();
         ph_sigmaIEIE->clear();
         ph_sigmaIEIEFull5x5->clear();
         ph_r9->clear();
@@ -331,8 +334,10 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
             // update according to 
             // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2#Selection_implementation_details
             // https://github.com/cms-sw/cmssw/blob/CMSSW_9_0_X/RecoEgamma/PhotonIdentification/plugins/cuts/PhoHadronicOverEMCut.cc#L36
-            ph_hOverE->push_back(ph->hadronicOverEm());
-            //ph_hOverE->push_back(ph->hadTowOverEm());
+            // there was a bug in the Photon ID twiki. The hoverE is supposed to be hadTowOverEm
+            ph_hOverE->push_back(ph->hadTowOverEm());
+            // save the wrong one just in case it is useful
+            ph_hOverE_hdronic->push_back(ph->hadronicOverEm());
             ph_sigmaIEIE->push_back(ph->sigmaIetaIeta());
             ph_sigmaIEIEFull5x5->push_back(ph->full5x5_sigmaIetaIeta());
             ph_r9->push_back(ph->r9());
