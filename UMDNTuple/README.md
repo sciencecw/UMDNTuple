@@ -1,15 +1,13 @@
------------------------------------
-Setup for 2016 data analysis
-----------------------------------
+#Setup for 2016 data analysis
 
-#----------------------- YOU CAN SIMPLY COPY-PASTE THIS RECIPE  ------------------------
+----------------------- YOU CAN SIMPLY COPY-PASTE THIS RECIPE  ------------------------
 
-#Make a working directory,
+Make a working directory,
 ```
 mkdir UMDNTuple
 ```
 
-#Setup CMSSW_9_4_9_cand2 (Eventually we will probably use CMSSW_10X for full Run 2)
+Setup CMSSW_9_4_9_cand2 (Eventually we will probably use CMSSW_10X for full Run 2)
 ```
 cmsrel CMSSW_9_4_9_cand2
 
@@ -18,7 +16,7 @@ cd CMSSW_9_4_9_cand2/src
 cmsenv
 ```
 
-#merge the EgammaPostRecoTools for photon and electron objects (https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2016DataRecommendations)
+Merge the EgammaPostRecoTools for photon and electron objects (https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2016DataRecommendations)
 ```
 git cms-init
 git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
@@ -27,7 +25,7 @@ scramv1 b -j 8
 
 This might take some time
 
-# get the ntuplizer
+Get the ntuplizer
 ```
 git clone https://github.com/albertobelloni/UMDNTuple
 cd UMDNTuple
@@ -36,15 +34,15 @@ cd UMDNTuple
 scram b -j4
 ```
 
-# to run the code
+##To run the code
 ```
-cd ../../../
+cd ${CMSSW_BASE}
 cmsRun src/UMDNTuple/UMDNTuple/run_production_cfg.py  isMC=1
 ```
 this will produce the ntuple.root under the current directory
 (Note the default input file is no lxplus. You need to change it if on a different site.)
 
-# to run with crab
+##To run with crab
 after the standard settings to run crab (i.e., voms and source crab), 
 
 ```
