@@ -17,9 +17,12 @@ opt.inputFiles = [
     #'file:/data/users/jkunkle/Samples/aQGC_WWW_SingleLepton_LO/Job_0000/MakeMINIAOD/aQGC_WWW_SingleLepton_LO_MINIAOD.root',
     #'file:/data/users/jkunkle/Samples/WGamma/02FE572F-88DA-E611-8CAB-001E67792884.root',
     #'file:/data/users/jkunkle/Samples/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAOD/08F5FD50-23BC-E611-A4C2-00259073E3DA.root',
+    'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
+    #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/00622F98-20EB-E611-A0A4-28924A33AFF6.root'
+    #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/FA3923C7-878E-E711-A8BE-0CC47A7C3420.root '
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/QCDMiniAOD/FCF48CF4-C5B1-E611-9D65-0CC47A4D766C.root'
-    'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/00622F98-20EB-E611-A0A4-28924A33AFF6.root'
+    #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/00622F98-20EB-E611-A0A4-28924A33AFF6.root'
     #'root://cms-xrd-global.cern.ch//store/data/Run2016G/SingleElectron/MINIAOD/23Sep2016-v1/100000/004A7893-A990-E611-B29F-002590E7DE36.root'
     #'root://cms-xrd-global.cern.ch//store/data/Run2016G/SingleElectron/MINIAOD/03Feb2017-v1/50000/004A75AB-B2EA-E611-B000-24BE05CEFDF1.root',
 ]
@@ -67,6 +70,7 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 #-----------------------------------------------------
 
 # Load the standard set of configuration modules
+# may not need this for MiniAOD v2
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.GeometryDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
@@ -90,10 +94,12 @@ process.BadChargedCandidateFilter.taggingMode = cms.bool( True )
 #------------------------------------
 #Condition DB tag
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
-dataGlobalTag = '80X_dataRun2_2016SeptRepro_v7'
+#dataGlobalTag = '80X_dataRun2_2016SeptRepro_v7'
+dataGlobalTag = '94X_dataRun2_v10'
 #mcGlobalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v3'
 #mcGlobalTag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'
-mcGlobalTag= '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
+#mcGlobalTag= '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
+mcGlobalTag = '94X_mcRun2_asymptotic_v3'
 
 if opt.isMC == 1:
   process.GlobalTag = GlobalTag(process.GlobalTag, mcGlobalTag, '')
@@ -102,85 +108,15 @@ else:
 
 
 #------------------------------------
+# load Egamma id
+from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+setupEgammaPostRecoSeq(process, applyEnergyCorrections=False,
+                       applyVIDOnCorrectedEgamma=False,
+                       isMiniAOD=True,
+                       runVID=True,
+                       era='2016-Legacy')  #era is new to select between 2016 / 2017,  it defaults to 2017
+#a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
 
-
-# Photon and electron correction
-process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
-  calibratedPatElectrons = cms.PSet(
-      initialSeed = cms.untracked.uint32(757132),
-      engineName = cms.untracked.string('TRandom3')
-  ),
-  calibratedPatPhotons = cms.PSet(
-      initialSeed = cms.untracked.uint32(1294),
-      engineName = cms.untracked.string('TRandom3')
-  ),
-)
-
-#eg_corr_phot_file = "EgammaAnalysis/ElectronTools/data/ScalesSmearings/Moriond17_23Jan_ele"
-#eg_corr_el_file   = "EgammaAnalysis/ElectronTools/data/ScalesSmearings/Moriond17_23Jan_ele"
-eg_corr_phot_file = "EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV2_2016_pho"
-eg_corr_el_file   = "EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_ele"
-
-# copied from  EgammaAnalysis/ElectronTools/python/calibratedPatPhotonsRun2_cfi.py:
-process.calibratedPatPhotons = cms.EDProducer("CalibratedPatPhotonProducerRun2",
-                                              # input collections
-                                              photons = cms.InputTag('slimmedPhotons'),# data or MC corrections
-                                              # if isMC is false, data corrections are applied
-                                              isMC = cms.bool(opt.isMC != 0),
-                                              # set to True to get special "fake" smearing for synchronization. Use JUST in case of synchronization
-                                              isSynchronization = cms.bool(False),
-                                              correctionFile = cms.string(eg_corr_phot_file),
-                                              recHitCollectionEB = cms.InputTag('reducedEgamma:reducedEBRecHits'),
-                                              recHitCollectionEE = cms.InputTag('reducedEgamma:reducedEERecHits'),
-                                              )
-
-#copied from  EgammaAnalysis/ElectronTools/python/calibratedPatElectronsRun2_cfi.py'
-process.calibratedPatElectrons = cms.EDProducer("CalibratedPatElectronProducerRun2", 
-                                                # input collections
-                                                electrons = cms.InputTag('slimmedElectrons'),
-                                                #electrons = cms.InputTag('selectedElectrons'),
-                                                #gbrForestName = cms.vstring('electron_eb_ECALTRK_lowpt', 
-                                                #                    'electron_eb_ECALTRK',
-                                                #                    'electron_ee_ECALTRK_lowpt', 
-                                                #                    'electron_ee_ECALTRK',
-                                                #                    'electron_eb_ECALTRK_lowpt_var', 
-                                                #                    'electron_eb_ECALTRK_var',
-                                                #                    'electron_ee_ECALTRK_lowpt_var', 
-                                                #                    'electron_ee_ECALTRK_var'
-                                                #                   ),
-                                                gbrForestName = cms.string("gedelectron_p4combination_25ns"),
-                                                #gbrForestName = cms.vstring("GEDelectron_EBCorrection_80X_EGM_v4"),
-                                                #gbrForestName = cms.vstring(""),
-                                                # data or MC corrections
-                                                # if isMC is false, data corrections are applied
-                                                isMC = cms.bool(opt.isMC != 0),
-                                                # set to True to get special "fake" smearing for synchronization. Use JUST in case of synchronization
-                                                isSynchronization = cms.bool(False),
-                                                correctionFile = cms.string(eg_corr_el_file),
-                                                recHitCollectionEB = cms.InputTag('reducedEgamma:reducedEBRecHits'),
-                                                recHitCollectionEE = cms.InputTag('reducedEgamma:reducedEERecHits'),
-                                                )
-
-#--------------------------------------------
-# Electron and photon VID
-#--------------------------------------------
-from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
-
-switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
-switchOnVIDPhotonIdProducer(process, DataFormat.MiniAOD)
-
-# define which IDs we want to produce
-my_eleid_modules = [
-        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronHLTPreselecition_Summer16_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Summer16_80X_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV70_cff',
-        ]
-
-#add them to the VID producer
-for idmod in my_eleid_modules:
-        setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
-
-setupAllVIDIdsInModule(process,'RecoEgamma.PhotonIdentification.Identification.cutBasedPhotonID_Spring16_V2p2_cff',setupVIDPhotonSelection)
 #--------------------------------------------
 
 #--------------------------------------------
@@ -358,22 +294,24 @@ filter_map = cms.untracked.vstring(
 
 process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronTag = cms.untracked.InputTag('slimmedElectrons'),
-    electronCalibTag = cms.untracked.InputTag('calibratedPatElectrons'),
-        elecIdVeryLooseTag = cms.untracked.InputTag("egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-veto"),
-        elecIdLooseTag     = cms.untracked.InputTag("egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-loose"),
-        elecIdMediumTag    = cms.untracked.InputTag("egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-medium"),
-        elecIdTightTag     = cms.untracked.InputTag("egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-tight"),
-        elecIdHLTTag       = cms.untracked.InputTag("egmGsfElectronIDs:cutBasedElectronHLTPreselection-Summer16-V1"),
-        elecIdHEEPTag      = cms.untracked.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70"),
+        elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-veto"),
+        elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-loose"),
+        elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-medium"),
+        elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-tight"),
+        #elecIdHLTStr       = cms.untracked.string("cutBasedElectronHLTPreselection-Summer16-V1"),
+        elecIdHEEPStr      = cms.untracked.string("heepElectronID-HEEPV70"),
+        # electron energy scale and smearings
+        elecEneCalibStr    = cms.untracked.string('ecalTrkEnergyPostCorr'),
     muonTag     = cms.untracked.InputTag('slimmedMuons'),
     photonTag   = cms.untracked.InputTag('slimmedPhotons'),
-    photonCalibTag   = cms.untracked.InputTag('calibratedPatPhotons'),
-        phoChIsoTag    = cms.untracked.InputTag("photonIDValueMapProducer:phoChargedIsolation"),
-        phoNeuIsoTag   = cms.untracked.InputTag("photonIDValueMapProducer:phoNeutralHadronIsolation"),
-        phoPhoIsoTag   = cms.untracked.InputTag("photonIDValueMapProducer:phoPhotonIsolation"),
-        phoIdLooseTag  = cms.untracked.InputTag("egmPhotonIDs:cutBasedPhotonID-Spring16-V2p2-loose"),
-        phoIdMediumTag = cms.untracked.InputTag("egmPhotonIDs:cutBasedPhotonID-Spring16-V2p2-medium"),
-        phoIdTightTag  = cms.untracked.InputTag("egmPhotonIDs:cutBasedPhotonID-Spring16-V2p2-tight"),
+        phoChIsoStr    = cms.untracked.string("phoChargedIsolation"),
+        phoNeuIsoStr   = cms.untracked.string("phoNeutralHadronIsolation"),
+        phoPhoIsoStr   = cms.untracked.string("phoPhotonIsolation"),
+        phoIdLooseStr  = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-loose"),
+        phoIdMediumStr = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-medium"),
+        phoIdTightStr  = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-tight"),
+        # photon energy scale and smearings
+        phoEneCalibStr = cms.untracked.string("ecalEnergyPostCorr"),
     jetTag     = cms.untracked.InputTag('slimmedJets'),
     fatjetTag     = cms.untracked.InputTag('slimmedJetsAK8'),
     metTag     = cms.untracked.InputTag('slimmedMETs'),
@@ -425,11 +363,7 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
 process.p = cms.Path()
 
 #process.p += process.selectedElectrons
-process.p += process.calibratedPatPhotons
-process.p += process.calibratedPatElectrons
-process.p += process.photonIDValueMapProducer
-process.p += process.egmGsfElectronIDSequence
-process.p += process.egmPhotonIDSequence
+process.p += process.egammaPostRecoSeq
 # run additional MET filters
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
