@@ -1,6 +1,4 @@
------------------------------------
-Setup for 2016 data analysis
-----------------------------------
+#Setup for 2016 data analysis
 
 #----------------------- YOU CAN SIMPLY COPY-PASTE THIS RECIPE  ------------------------
 
