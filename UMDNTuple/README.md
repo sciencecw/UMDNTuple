@@ -36,7 +36,7 @@ scram b -j4
 
 ##To run the code
 ```
-cd ../../../
+cd ${CMSSW_BASE}
 cmsRun src/UMDNTuple/UMDNTuple/run_production_cfg.py  isMC=1
 ```
 this will produce the ntuple.root under the current directory
