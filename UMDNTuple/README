@@ -5,46 +5,56 @@ Setup for 2016 data analysis
 #----------------------- YOU CAN SIMPLY COPY-PASTE THIS RECIPE  ------------------------
 
 #Make a working directory,
-
+```
 mkdir UMDNTuple
+```
 
-#Setup CMSSW_8_0_26_patch1 (minimum of CMSSW_8_0_26_patch1 is required, MET Filters do not merge with CMSSW_8_0_27  )
+#Setup CMSSW_9_4_9_cand2 (Eventually we will probably use CMSSW_10X for full Run 2)
+```
+cmsrel CMSSW_9_4_9_cand2
 
-cmsrel CMSSW_8_0_26_patch1
-
-cd CMSSW_8_0_26_patch1/src
+cd CMSSW_9_4_9_cand2/src
 
 cmsenv
+```
 
-#Include VID and HEEP (https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedElectronIdentificationRun2,https://twiki.cern.ch/twiki/bin/view/CMS/HEEPElectronIdentificationRun2)
+#merge the EgammaPostRecoTools for photon and electron objects (https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2016DataRecommendations)
+```
+git cms-init
+git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
+scramv1 b -j 8
+```
 
-git cms-merge-topic Sam-Harper:HEEPV70VID_8010_ReducedCheckout
-git cms-merge-topic ikrav:egm_id_80X_v3
-mkdir -p ../external/slc6_amd64_gcc530/data/RecoEgamma/ElectronIdentification/
-git clone https://github.com/cms-data/RecoEgamma-ElectronIdentification ../external/slc6_amd64_gcc530/data/RecoEgamma/ElectronIdentification/data
-
-#Include Photon VID 
-
-git cms-merge-topic ikrav:egm_id_80X_v3_photons
-
-  
-#Inlcude MET filters (https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_the_Bad_Charged_Hadro)
-git cms-merge-topic -u cms-met:fromCMSSW_8_0_20_postICHEPfilter
-
-#Incude ECAL scale corrections(https://twiki.cern.ch/twiki/bin/view/CMS/EGMSmearer)
-
-git cms-merge-topic shervin86:Moriond2017_JEC_energyScales
-#git cms-merge-topic cms-egamma:EGM_gain_v1
-cd EgammaAnalysis/ElectronTools/data
-# download the txt files with the corrections
-git clone https://github.com/ECALELFS/ScalesSmearings.git
-cd ScalesSmearings
-git checkout Moriond17_23Jan_v2
-
-
-cd $CMSSW_BASE/src
+This might take some time
 
 # get the ntuplizer
+```
 git clone https://github.com/albertobelloni/UMDNTuple
-
+cd UMDNTuple
+git checkout legacy2016
+cd UMDNTuple
 scram b -j4
+```
+
+# to run the code
+```
+cd ../../../
+cmsRun src/UMDNTuple/UMDNTuple/run_production_cfg.py  isMC=1
+```
+this will produce the ntuple.root under the current directory
+(Note the default input file is no lxplus. You need to change it if on a different site.)
+
+# to run with crab
+after the standard settings to run crab (i.e., voms and source crab), 
+
+```
+cd ${CMSSW_BASE}/src/UMDNTuple/UMDNTuple
+```
+edit the datasets in `data_samples` and `mc_samples`, under `submit_crab.py`. Then
+
+```
+python submit_crab.py --version 0228
+chmod 744 submit_crab.sh
+./submit_crab.sh
+```
+Then the jobs will be submitted.
