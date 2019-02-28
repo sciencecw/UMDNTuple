@@ -20,6 +20,10 @@ opt.inputFiles = [
     'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/00622F98-20EB-E611-A0A4-28924A33AFF6.root'
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/FA3923C7-878E-E711-A8BE-0CC47A7C3420.root '
+    #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
+    #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/QCDMiniAOD/FCF48CF4-C5B1-E611-9D65-0CC47A4D766C.root'
+    #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/00622F98-20EB-E611-A0A4-28924A33AFF6.root'
+    #'root://cms-xrd-global.cern.ch//store/data/Run2016G/SingleElectron/MINIAOD/23Sep2016-v1/100000/004A7893-A990-E611-B29F-002590E7DE36.root'
     #'root://cms-xrd-global.cern.ch//store/data/Run2016G/SingleElectron/MINIAOD/03Feb2017-v1/50000/004A75AB-B2EA-E611-B000-24BE05CEFDF1.root',
 ]
 
