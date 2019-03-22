@@ -9,7 +9,7 @@ process = cms.Process("UMDNTuple")
 opt = VarParsing.VarParsing ('analysis')
 
 opt.register('isMC', -1, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, 'Flag indicating if the input samples are from MC (1) or from the detector (0).')
-opt.register('nEvents', 1000, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, 'Number of events to analyze')
+opt.register('nEvents', 100, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, 'Number of events to analyze')
 opt.register('disableEventWeights', 0, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.bool, 'Set to 1 to disable event weights')
 
 #input files. Can be changed on the command line with the option inputFiles=...
@@ -17,7 +17,9 @@ opt.inputFiles = [
     #'file:/data/users/jkunkle/Samples/aQGC_WWW_SingleLepton_LO/Job_0000/MakeMINIAOD/aQGC_WWW_SingleLepton_LO_MINIAOD.root',
     #'file:/data/users/jkunkle/Samples/WGamma/02FE572F-88DA-E611-8CAB-001E67792884.root',
     #'file:/data/users/jkunkle/Samples/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAOD/08F5FD50-23BC-E611-A4C2-00259073E3DA.root',
-    'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
+    #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
+    #'root://cms-xrd-global.cern.ch//store/data/Run2016B/SingleMuon/MINIAOD/07Aug17_ver1-v1/70000/F8E02A2B-0E7F-E711-BC53-0CC47A4D761A.root', #rereco legacy16 @ Aug17
+    '/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/90000/FE8A7852-66E4-E611-B5D0-002590E7E01A.root', # DY MC
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/00622F98-20EB-E611-A0A4-28924A33AFF6.root'
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/FA3923C7-878E-E711-A8BE-0CC47A7C3420.root '
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
@@ -29,9 +31,8 @@ opt.inputFiles = [
 
 
 #defaults
-opt.nEvents = 1000
+#opt.nEvents = 1000
 opt.disableEventWeights = 0
-
 opt.parseArguments()
 
 process.source = cms.Source("PoolSource",
@@ -39,6 +40,7 @@ process.source = cms.Source("PoolSource",
 
 # try to determine if its data or MC based on the name
 # otherwise request the user to provide isMC=
+print "isMC: ", opt.isMC
 if opt.isMC < 0 and len(process.source.fileNames) > 0:
   if re.match(r'.*/(MINI)?AODSIM/.*', process.source.fileNames[0]):
     print "MC dataset detected."
@@ -89,6 +91,8 @@ process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
 process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
 process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
 process.BadChargedCandidateFilter.taggingMode = cms.bool( True )
+
+
 
 
 #------------------------------------
@@ -291,6 +295,16 @@ filter_map = cms.untracked.vstring(
     '101:Flag_BadPFMuonFilter',
 )
 
+process.prefiringweight = cms.EDProducer("L1ECALPrefiringWeightProducer",
+                                 ThePhotons = cms.InputTag("slimmedPhotons"),
+	                         TheJets = cms.InputTag("slimmedJets"),
+                                 L1Maps = cms.string("src/L1Prefiring/EventWeightProducer/files/L1PrefiringMaps_new.root"), # update this line with the location of this file
+                                 #L1Maps = cms.string("L1PrefiringMaps_new.root"), # update this line with the location of this file
+                                 #DataEra = cms.string("2017BtoF"), #Use 2016BtoH for 2016
+                                 DataEra = cms.string("2016BtoH"),
+                                 UseJetEMPt = cms.bool(False), #can be set to true to use jet prefiring maps parametrized vs pt(em) instead of pt
+	                         PrefiringRateSystematicUncty = cms.double(0.2) #Minimum relative prefiring uncty per object
+                                 )
 
 process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronTag = cms.untracked.InputTag('slimmedElectrons'),
@@ -318,7 +332,7 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     triggerTag  = cms.untracked.InputTag('TriggerResults', '', 'HLT'),
     triggerObjTag = cms.untracked.InputTag('selectedPatTrigger'),
     triggerMap = trigger_map,
-    metFilterTag  = cms.untracked.InputTag('TriggerResults', '', 'PAT'),
+    metFilterTag  = cms.untracked.InputTag('TriggerResults', '', 'RECO'),
     BadChargedCandidateFilter = cms.untracked.InputTag('BadChargedCandidateFilter'),
     BadPFMuonFilter = cms.untracked.InputTag('BadPFMuonFilter'),
     metFilterMap = filter_map,
@@ -328,6 +342,9 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     #conversionsTag = cms.untracked.InputTag('allConversions' ),
     verticesTag  = cms.untracked.InputTag('offlineSlimmedPrimaryVertices'),
     rhoTag  = cms.untracked.InputTag('fixedGridRhoFastjetAll'),
+    prefTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProb'),
+    prefupTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProbUp'),
+    prefdownTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProbDown'),
     puTag   = cms.untracked.InputTag('slimmedAddPileupInfo'),
     lheEventTag  = cms.untracked.InputTag('externalLHEProducer'),
     lheRunTag  = cms.untracked.InputTag('externalLHEProducer'),
@@ -358,7 +375,7 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
 
 
 )
-    
+
 
 process.p = cms.Path()
 
@@ -367,6 +384,7 @@ process.p += process.egammaPostRecoSeq
 # run additional MET filters
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
+process.p += process.prefiringweight
 
 process.p += process.UMDNTuple
 
