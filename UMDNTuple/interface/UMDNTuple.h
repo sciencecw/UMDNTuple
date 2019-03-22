@@ -53,6 +53,7 @@ private :
 
   EventInfoProducer  _eventProducer;
   GenParticleProducer  _genProducer;
+  //PrefireWeightProducer  _prefProducer;
   ElectronProducer _elecProducer;
   MuonProducer     _muonProducer;
   PhotonProducer   _photProducer;
@@ -72,6 +73,7 @@ private :
   bool _produceMETFilter;
   bool _produceTrig;
   bool _produceGen;
+  //bool _producePref;
 
   int _isMC;
 

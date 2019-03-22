@@ -18,6 +18,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     _produceMETFilter(true),
     _produceTrig(true),
     _produceGen(true),
+    //_producePref(true),
     _isMC( -1 )
 {
     edm::Service<TFileService> fs;
@@ -97,6 +98,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     std::string prefix_fjet        = "fjet";
     std::string prefix_trig        = "passTrig";
     std::string prefix_gen         = "gen";
+    std::string prefix_pref        = "pref";
     std::string prefix_met         = "met";
     std::string prefix_met_filter  = "metFilter";
 
@@ -121,6 +123,9 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     if( iConfig.exists(prefix_gen) ) {
         prefix_gen = iConfig.getUntrackedParameter<std::string>("prefix_gen");
     }
+    if( iConfig.exists(prefix_pref) ) {
+        prefix_pref = iConfig.getUntrackedParameter<std::string>("prefix_pref");
+    }
     if( iConfig.exists(prefix_met) ) {
         prefix_met = iConfig.getUntrackedParameter<std::string>("prefix_met");
     }
@@ -134,7 +139,11 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     edm::EDGetTokenT<std::vector<reco::Vertex> > verticesToken;
     edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puToken;
     edm::EDGetTokenT<GenEventInfoProduct> generatorToken;
+    edm::EDGetTokenT<double> prefToken;
     edm::EDGetTokenT<double> rhoToken;
+    edm::EDGetTokenT<double> prefweight_token;
+    edm::EDGetTokenT<double> prefweightup_token;
+    edm::EDGetTokenT<double> prefweightdown_token;
     edm::EDGetTokenT<LHEEventProduct> lheEventToken;
     edm::EDGetTokenT<LHERunInfoProduct> lheRunToken;
 
@@ -161,6 +170,14 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     if( iConfig.exists("rhoTag") ) {
         rhoToken = consumes<double>(
                  iConfig.getUntrackedParameter<edm::InputTag>("rhoTag"));
+    }
+    if( iConfig.exists("prefTag")) { //FIXME
+	prefweight_token = consumes< double >(
+		  iConfig.getUntrackedParameter<edm::InputTag>("prefTag")); 
+	prefweightup_token = consumes< double >(
+		  iConfig.getUntrackedParameter<edm::InputTag>("prefupTag")); 
+	prefweightdown_token = consumes< double >(
+		  iConfig.getUntrackedParameter<edm::InputTag>("prefdownTag")); 
     }
     if( iConfig.exists("lheEventTag") ) {
         lheEventToken = consumes<LHEEventProduct>(
@@ -211,7 +228,8 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     // Event information
     _eventProducer.initialize( verticesToken, puToken, 
                                generatorToken, lheEventToken, lheRunToken,
-                               rhoToken, _myTree, _weightInfoTree, _isMC );
+                               rhoToken, prefweight_token, prefweightup_token, prefweightdown_token,
+ 			       _myTree, _weightInfoTree, _isMC );
 
     if(disableEventWeights ) {
         _eventProducer.disableEventWeights();
@@ -363,6 +381,7 @@ void UMDNTuple::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     if( _produceMETFilter  )    _metFilterProducer .produce( iEvent );
     if( _produceTrig  )         _trigProducer      .produce( iEvent );
     if( _produceGen && _isMC  ) _genProducer       .produce( iEvent );
+    //if( _producePref )          _prefProducer       .produce( iEvent ); //FIXME
 
     _myTree->Fill();
 }
