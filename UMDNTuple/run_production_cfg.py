@@ -93,13 +93,6 @@ process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidate
 process.BadChargedCandidateFilter.taggingMode = cms.bool( True )
 
 
-## x-y corrected MET
-#from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
-#process.patPfMetT0pcT1Txy = patMETs.clone(
-#    metSource = cms.InputTag('pfMetT0pcT1Txy'),
-#    addMuonCorrections = cms.bool(False),
-#    addGenMET    = cms.bool(False)
-#)
 
 
 #------------------------------------
@@ -383,20 +376,6 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
 
 )
 
-#process.out = cms.OutputModule(
-#    "PoolOutputModule",
-#    fileName = cms.untracked.string(opt.outputFile),
-#    SelectEvents   = cms.untracked.PSet( SelectEvents = cms.vstring('p') ),
-#    outputCommands = cms.untracked.vstring(
-#	'keep *',
-#	#'drop *',
-#	#'keep *MET_*_*_*',
-#        #'keep recoGenMETs_*_*_*',
-#        #'keep recoCaloMETs_*_*_*',
-#        #'keep recoPFMETs_*_*_*',
-#        #'keep *_*_*_CORR'
-#        )
-#    )    
 
 process.p = cms.Path()
 
@@ -406,10 +385,6 @@ process.p += process.egammaPostRecoSeq
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
 process.p += process.prefiringweight
-#process.p += process.patPfMetT0pcT1Txy
 
 process.p += process.UMDNTuple
 
-#process.e1 = cms.EndPath(
-#    process.out
-    #)

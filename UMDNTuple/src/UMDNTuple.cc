@@ -18,7 +18,6 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     _produceMETFilter(true),
     _produceTrig(true),
     _produceGen(true),
-    //_producePref(true),
     _isMC( -1 )
 {
     edm::Service<TFileService> fs;
@@ -171,7 +170,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
         rhoToken = consumes<double>(
                  iConfig.getUntrackedParameter<edm::InputTag>("rhoTag"));
     }
-    if( iConfig.exists("prefTag")) { //FIXME
+    if( iConfig.exists("prefTag")) { 
 	prefweight_token = consumes< double >(
 		  iConfig.getUntrackedParameter<edm::InputTag>("prefTag")); 
 	prefweightup_token = consumes< double >(
@@ -381,7 +380,6 @@ void UMDNTuple::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     if( _produceMETFilter  )    _metFilterProducer .produce( iEvent );
     if( _produceTrig  )         _trigProducer      .produce( iEvent );
     if( _produceGen && _isMC  ) _genProducer       .produce( iEvent );
-    //if( _producePref )          _prefProducer       .produce( iEvent ); //FIXME
 
     _myTree->Fill();
 }
