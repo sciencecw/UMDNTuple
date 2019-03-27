@@ -99,11 +99,11 @@ process.BadChargedCandidateFilter.taggingMode = cms.bool( True )
 #Condition DB tag
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #dataGlobalTag = '80X_dataRun2_2016SeptRepro_v7'
-dataGlobalTag = '94X_dataRun2_v10'
+dataGlobalTag = '94X_dataRun2_v6'
 #mcGlobalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v3'
 #mcGlobalTag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'
 #mcGlobalTag= '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
-mcGlobalTag = '94X_mcRun2_asymptotic_v3'
+mcGlobalTag = '94X_mc2017_realistic_v14'
 
 if opt.isMC == 1:
   process.GlobalTag = GlobalTag(process.GlobalTag, mcGlobalTag, '')
@@ -118,7 +118,7 @@ setupEgammaPostRecoSeq(process, applyEnergyCorrections=False,
                        applyVIDOnCorrectedEgamma=False,
                        isMiniAOD=True,
                        runVID=True,
-                       era='2016-Legacy')  #era is new to select between 2016 / 2017,  it defaults to 2017
+                       era='2017')  #era is new to select between 2016 / 2017,  it defaults to 2017
 #a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
 
 #--------------------------------------------
@@ -300,18 +300,18 @@ process.prefiringweight = cms.EDProducer("L1ECALPrefiringWeightProducer",
 	                         TheJets = cms.InputTag("slimmedJets"),
                                  L1Maps = cms.string("src/L1Prefiring/EventWeightProducer/files/L1PrefiringMaps_new.root"), # update this line with the location of this file
                                  #L1Maps = cms.string("L1PrefiringMaps_new.root"), # update this line with the location of this file
-                                 #DataEra = cms.string("2017BtoF"), #Use 2016BtoH for 2016
-                                 DataEra = cms.string("2016BtoH"),
+                                 DataEra = cms.string("2017BtoF"), #Use 2016BtoH for 2016
+                                 #DataEra = cms.string("2016BtoH"),
                                  UseJetEMPt = cms.bool(False), #can be set to true to use jet prefiring maps parametrized vs pt(em) instead of pt
 	                         PrefiringRateSystematicUncty = cms.double(0.2) #Minimum relative prefiring uncty per object
                                  )
 
 process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronTag = cms.untracked.InputTag('slimmedElectrons'),
-        elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-veto"),
-        elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-loose"),
-        elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-medium"),
-        elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-tight"),
+        elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-veto"),
+        elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-loose"),
+        elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-medium"),
+        elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-tight"),
         #elecIdHLTStr       = cms.untracked.string("cutBasedElectronHLTPreselection-Summer16-V1"),
         elecIdHEEPStr      = cms.untracked.string("heepElectronID-HEEPV70"),
         # electron energy scale and smearings
@@ -321,9 +321,9 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
         phoChIsoStr    = cms.untracked.string("phoChargedIsolation"),
         phoNeuIsoStr   = cms.untracked.string("phoNeutralHadronIsolation"),
         phoPhoIsoStr   = cms.untracked.string("phoPhotonIsolation"),
-        phoIdLooseStr  = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-loose"),
-        phoIdMediumStr = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-medium"),
-        phoIdTightStr  = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-tight"),
+        phoIdLooseStr  = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-loose"),
+        phoIdMediumStr = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-medium"),
+        phoIdTightStr  = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-tight"),
         # photon energy scale and smearings
         phoEneCalibStr = cms.untracked.string("ecalEnergyPostCorr"),
     jetTag     = cms.untracked.InputTag('slimmedJets'),
