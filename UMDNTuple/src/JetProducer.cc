@@ -121,6 +121,7 @@ void JetProducer::produce(const edm::Event &iEvent ) {
         //const pat::Jet & jet = (*jetptr);
  
         if( jet->pt() < _minPt ) continue;
+        if( !jet->hasPFSpecific()) continue;
 
         jet_n += 1;
 

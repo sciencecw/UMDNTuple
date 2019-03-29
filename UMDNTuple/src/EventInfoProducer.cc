@@ -57,11 +57,11 @@ void EventInfoProducer::initialize(
     tree -> Branch( "vtx_n", &vtx_n, "vtx_n/I");
     tree -> Branch( "pu_n", &pu_n, "pu_n/I");
     tree -> Branch( "rho", &rho, "rho/F");
-    tree -> Branch( "prefweight", &prefweight, "prefweight/F"); // should be run with MC only?
-    tree -> Branch( "prefweightup", &prefweightup, "prefweightup/F");
-    tree -> Branch( "prefweightdown", &prefweightdown, "prefweightdown/F");
 
     if( _isMC ) {
+    	tree -> Branch( "prefweight", &prefweight, "prefweight/F"); // should be run with MC only?
+    	tree -> Branch( "prefweightup", &prefweightup, "prefweightup/F");
+    	tree -> Branch( "prefweightdown", &prefweightdown, "prefweightdown/F");
         tree -> Branch( "truepu_n", &truepu_n, "truepu_n/I");
         tree -> Branch( "EventWeights", &EventWeights);
         tree -> Branch( "pdf_id1", &pdf_id1, "pdf_id1/F");

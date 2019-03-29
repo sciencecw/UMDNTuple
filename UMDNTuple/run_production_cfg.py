@@ -19,7 +19,10 @@ opt.inputFiles = [
     #'file:/data/users/jkunkle/Samples/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAOD/08F5FD50-23BC-E611-A4C2-00259073E3DA.root',
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
     #'root://cms-xrd-global.cern.ch//store/data/Run2016B/SingleMuon/MINIAOD/07Aug17_ver1-v1/70000/F8E02A2B-0E7F-E711-BC53-0CC47A4D761A.root', #rereco legacy16 @ Aug17
-    '/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/90000/FE8A7852-66E4-E611-B5D0-002590E7E01A.root', # DY MC
+    #'/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/90000/FE8A7852-66E4-E611-B5D0-002590E7E01A.root', # DY MC 2016
+    #'/store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/40000/B4C84D02-5242-E811-AA60-008CFA197A60.root', # DY MC 2017
+    '/store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/40000/04F71189-4742-E811-AA48-008CFAC9157C.root',
+    #'/store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/PU2017RECOSIMstep_12Apr2018_94X_mc2017_realistic_v14-v1/910000/ECC11159-F647-E811-A157-001E67792510.root', # DY MC 2017 Madgraph RecoSIM step
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/00622F98-20EB-E611-A0A4-28924A33AFF6.root'
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/FA3923C7-878E-E711-A8BE-0CC47A7C3420.root '
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
@@ -99,7 +102,7 @@ process.BadChargedCandidateFilter.taggingMode = cms.bool( True )
 #Condition DB tag
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #dataGlobalTag = '80X_dataRun2_2016SeptRepro_v7'
-dataGlobalTag = '94X_dataRun2_v6'
+dataGlobalTag = '94X_dataRun2_v11'
 #mcGlobalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v3'
 #mcGlobalTag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'
 #mcGlobalTag= '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
@@ -118,7 +121,7 @@ setupEgammaPostRecoSeq(process, applyEnergyCorrections=False,
                        applyVIDOnCorrectedEgamma=False,
                        isMiniAOD=True,
                        runVID=True,
-                       era='2017')  #era is new to select between 2016 / 2017,  it defaults to 2017
+                       era='2017-Nov17ReReco')  #era is new to select between 2016 / 2017,  it defaults to 2017
 #a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
 
 #--------------------------------------------
@@ -298,7 +301,7 @@ filter_map = cms.untracked.vstring(
 process.prefiringweight = cms.EDProducer("L1ECALPrefiringWeightProducer",
                                  ThePhotons = cms.InputTag("slimmedPhotons"),
 	                         TheJets = cms.InputTag("slimmedJets"),
-                                 L1Maps = cms.string("src/L1Prefiring/EventWeightProducer/files/L1PrefiringMaps_new.root"), # update this line with the location of this file
+                                 L1Maps = cms.string("src/L1Prefiring/EventWeightProducer/data/L1PrefiringMaps_new.root"), # update this line with the location of this file
                                  #L1Maps = cms.string("L1PrefiringMaps_new.root"), # update this line with the location of this file
                                  DataEra = cms.string("2017BtoF"), #Use 2016BtoH for 2016
                                  #DataEra = cms.string("2016BtoH"),
@@ -330,7 +333,7 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     fatjetTag     = cms.untracked.InputTag('slimmedJetsAK8'),
     metTag     = cms.untracked.InputTag('slimmedMETs'),
     triggerTag  = cms.untracked.InputTag('TriggerResults', '', 'HLT'),
-    triggerObjTag = cms.untracked.InputTag('selectedPatTrigger'),
+    triggerObjTag = cms.untracked.InputTag('slimmedPatTrigger'),
     triggerMap = trigger_map,
     metFilterTag  = cms.untracked.InputTag('TriggerResults', '', 'RECO'),
     BadChargedCandidateFilter = cms.untracked.InputTag('BadChargedCandidateFilter'),
@@ -369,7 +372,8 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronMinPt = cms.untracked.double( 10 ),
     muonMinPt = cms.untracked.double( 10 ),
     photonMinPt = cms.untracked.double( 20 ),
-    jetMinPt = cms.untracked.double( 30 ),
+    #jetMinPt = cms.untracked.double( 30 ),
+    jetMinPt = cms.untracked.double( 170),
     fjetMinPt = cms.untracked.double( 200 ),
     genMinPt = cms.untracked.double( 5 ),
 
@@ -384,7 +388,7 @@ process.p += process.egammaPostRecoSeq
 # run additional MET filters
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
-process.p += process.prefiringweight
+if opt.isMC: process.p += process.prefiringweight
 
 process.p += process.UMDNTuple
 

@@ -77,16 +77,16 @@ data_samples = [
     #'/SingleElectron/Run2016H-07Aug17-v1/MINIAOD',
 
     # 2017
-    '/SingleMuon/Run2017B-31Mar2018-v1/MINIAOD',
-    '/SingleMuon/Run2017C-31Mar2018-v1/MINIAOD',
-    '/SingleMuon/Run2017D-31Mar2018-v1/MINIAOD',
-    '/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD',
-    '/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD',
-    '/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD',
-    '/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD',
-    '/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD',
-    '/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD',
-    '/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD',
+   # '/SingleMuon/Run2017B-31Mar2018-v1/MINIAOD',
+   # '/SingleMuon/Run2017C-31Mar2018-v1/MINIAOD',
+   # '/SingleMuon/Run2017D-31Mar2018-v1/MINIAOD',
+   # '/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD',
+   # '/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD',
+   # '/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD',
+   # '/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD',
+   # '/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD',
+   # '/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD',
+   # '/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD',
 
 ]
 
@@ -319,12 +319,14 @@ for path, useEventWeights in mc_samples:
     file_entries.append('config.General.transferOutputs = True')
     file_entries.append('config.General.transferLogs = False')
     file_entries.append('config.JobType.pluginName = "Analysis"')
-    file_entries.append('config.JobType.psetName = "run_production_cfg.py"')
+    #file_entries.append('config.JobType.psetName = "run_production_cfg.py"')
+    file_entries.append('config.JobType.psetName = "src/UMDNTuple/UMDNTuple/run_production_cfg.py"')
     file_entries.append('config.Data.outLFNDirBase = "%s"' %options.outputPath)
     file_entries.append('config.Data.publication = False')
     file_entries.append('config.Site.storageSite = "%s"' %options.site)
     file_entries.append('config.Data.outputDatasetTag= "UMDNTuple_%s"' %options.version)
     file_entries.append('config.JobType.pyCfgParams = ["isMC=1","disableEventWeights=%d"]' %(not useEventWeights))
+    file_entries.append('config.JobType. inputFiles= "L1PrefiringMaps_new.root"') 
     file_entries.append('config.General.requestName = "production_%s_%s"' %(options.version, base_name))
     file_entries.append('config.Data.inputDataset = "%s"' %path)
     file_entries.append('config.Data.splitting = "FileBased"')
