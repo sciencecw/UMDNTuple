@@ -89,7 +89,6 @@ void TriggerProducer::produce(const edm::Event &iEvent ) {
     if( _trigger_idx_map.size() == 0 || ( runNumber != _prevRunNumber ) ) {
 
         _trigger_idx_map.clear();
- 	//std::cout<< "run number "<< runNumber<<std::endl;	
 
         for (unsigned i = 0; i < trigNames.size(); i++) {
 
@@ -115,8 +114,6 @@ void TriggerProducer::produce(const edm::Event &iEvent ) {
         if( triggers->accept( mitr->first ) ) {
 	 //   std::cout<< "trigger: " << mitr->first << " " << mitr->second << " accepted"<< std::endl;
             _passing_triggers->push_back( mitr->second );
-        }else{
-	 //   std::cout<< "trigger: " << mitr->first << " " << mitr->second << " rejected"<< std::endl;
 	}
     }
     for (unsigned j=0; j < triggerObjects->size();++j){
