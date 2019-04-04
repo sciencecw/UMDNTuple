@@ -39,6 +39,7 @@ void TriggerProducer::initialize( const std::string &prefix,
     _trigger_idx_map.clear();
     _trigger_map.clear();
        
+    // parse trigger map parameter from CMSSW config 
     for( std::vector<std::string>::const_iterator itr = trigMap.begin();
             itr != trigMap.end(); ++itr ) {
         int trig_idx;
@@ -66,6 +67,7 @@ void TriggerProducer::produce(const edm::Event &iEvent ) {
     edm::Handle<pat::TriggerObjectStandAloneCollection> triggerObjects;
     iEvent.getByToken(_trigObjToken,triggerObjects);
 
+    // check pointer validity
     if( !triggers.isValid() || triggers.failedToGet() ) {
         std::cout << "could not get trigger results.  Will not fill triggers!" << std::endl;
         return;
@@ -87,6 +89,7 @@ void TriggerProducer::produce(const edm::Event &iEvent ) {
     if( _trigger_idx_map.size() == 0 || ( runNumber != _prevRunNumber ) ) {
 
         _trigger_idx_map.clear();
+ 	//std::cout<< "run number "<< runNumber<<std::endl;	
 
         for (unsigned i = 0; i < trigNames.size(); i++) {
 
@@ -95,10 +98,13 @@ void TriggerProducer::produce(const edm::Event &iEvent ) {
             std::string::size_type version_pos = trigname.find_last_of("_");
 
             std::string trigname_mod = trigname.substr( 0, version_pos );
+	    //std::cout<< std::setw(4)<<i<<" trig name: "<< trigname <<" trig name mod: "<<trigname_mod<<std::endl;
+	    //std::cout<< std::setw(3)<<i<<" "<<trigname_mod<<std::endl;
 
             std::map<std::string, int>::const_iterator mitr = _trigger_map.find(trigname_mod);
 
             if( mitr != _trigger_map.end() ) {
+	//	std::cout<< "pushback: " << mitr->first << " " << mitr->second << std::endl;
                 _trigger_idx_map.push_back( std::make_pair(i, mitr->second) );
             }
         }
@@ -107,8 +113,11 @@ void TriggerProducer::produce(const edm::Event &iEvent ) {
     for( std::vector<std::pair<int,int> >::const_iterator mitr = _trigger_idx_map.begin();
             mitr != _trigger_idx_map.end(); ++mitr ) {
         if( triggers->accept( mitr->first ) ) {
+	 //   std::cout<< "trigger: " << mitr->first << " " << mitr->second << " accepted"<< std::endl;
             _passing_triggers->push_back( mitr->second );
-        }
+        }else{
+	 //   std::cout<< "trigger: " << mitr->first << " " << mitr->second << " rejected"<< std::endl;
+	}
     }
     for (unsigned j=0; j < triggerObjects->size();++j){
         pat::TriggerObjectStandAlone obj = triggerObjects->at(j);

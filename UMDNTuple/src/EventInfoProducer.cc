@@ -102,15 +102,18 @@ void EventInfoProducer::produce(const edm::Event &iEvent ) {
     edm::Handle<double>   rho_h;
     iEvent.getByToken(_rhoToken, rho_h);
 
-    edm::Handle< double > theprefweight;
-    edm::Handle< double > theprefweightup;
-    edm::Handle< double > theprefweightdown;
-    iEvent.getByToken(_prefweight_token, theprefweight ) ;
-    prefweight =(*theprefweight);
-    iEvent.getByToken(_prefweightup_token, theprefweightup ) ;
-    prefweightup =(*theprefweightup);
-    iEvent.getByToken(_prefweightdown_token, theprefweightdown ) ;
-    prefweightdown =(*theprefweightdown);
+    if (_isMC){
+
+       edm::Handle< double > theprefweight;
+       edm::Handle< double > theprefweightup;
+       edm::Handle< double > theprefweightdown;
+       iEvent.getByToken(_prefweight_token, theprefweight ) ;
+       prefweight =(*theprefweight);
+       iEvent.getByToken(_prefweightup_token, theprefweightup ) ;
+       prefweightup =(*theprefweightup);
+       iEvent.getByToken(_prefweightdown_token, theprefweightdown ) ;
+       prefweightdown =(*theprefweightdown);
+    }
 
     eventNumber      = iEvent.id().event();
     runNumber     = iEvent.id().run();

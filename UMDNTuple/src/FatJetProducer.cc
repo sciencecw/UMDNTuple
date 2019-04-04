@@ -38,7 +38,7 @@ void FatJetProducer::initialize( const std::string &prefix,
     tree->Branch( (prefix + "_ak08_Puppi_tau2" ).c_str(), &jet_ak08_Puppi_tau2 );
     tree->Branch( (prefix + "_ak08_Puppi_tau3" ).c_str(), &jet_ak08_Puppi_tau3 );
 
-    _jetProducer.initialize( prefix, jetTok, tree, 0 );
+    //_jetProducer.initialize( prefix, jetTok, tree, 0 );
 
 
 
@@ -59,7 +59,7 @@ void FatJetProducer::produce(const edm::Event &iEvent ) {
     jet_ak08_Puppi_tau2->clear();
     jet_ak08_Puppi_tau3->clear();
 
-    _jetProducer.produce( iEvent );
+    //_jetProducer.produce( iEvent );
 
     iEvent.getByToken(_jetToken,jets);
 
@@ -67,7 +67,7 @@ void FatJetProducer::produce(const edm::Event &iEvent ) {
         edm::Ptr<pat::Jet> jet = jets->ptrAt(j);
  
         if( jet->pt() < _minPt ) continue;
-        if( !jet->hasPFSpecific() ) continue;
+        //if( !jet->hasPFSpecific() ) continue;
 
         jet_ak08_prunedMass -> push_back( jet->userFloat("ak8PFJetsCHSValueMap:ak8PFJetsCHSPrunedMass") );
         //jet_ak08_prunedMass -> push_back( jet->userFloat("ak8PFJetsCHSPrunedMass") );
