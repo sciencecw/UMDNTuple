@@ -119,17 +119,11 @@ void JetProducer::produce(const edm::Event &iEvent ) {
 
     for (unsigned int j=0; j < jets->size();++j){
         edm::Ptr<pat::Jet> jet = jets->ptrAt(j);
-        //const pat::Jet & jet = (*jetptr);
  
         if( jet->pt() < _minPt ) continue;
-	//std::cout<<"minpt"<<_minPt<<std::endl;
 
         jet_n += 1;
 
-	//std::cout<<"jetpt"<< jet->pt() <<std::endl;
-	//std::cout<<"jeteta"<< jet->eta() <<std::endl;
-	//std::cout<<"jetphi"<< jet->phi() <<std::endl;
-	//std::cout<<"jenergy"<< jet->energy() <<std::endl;
         jet_pt -> push_back( jet->pt() );
         jet_eta -> push_back( jet->eta() );
         jet_phi -> push_back( jet->phi() );
@@ -137,10 +131,9 @@ void JetProducer::produce(const edm::Event &iEvent ) {
 
         if( _detail > 0 ) {
 
-	    //std::cout<<"j_nod "<< jet->numberOfDaughters() <<std::endl;
             jet_ndaughters -> push_back( jet->numberOfDaughters());
 
-            //if( jet->hasPFSpecific()) {
+            if( jet->hasPFSpecific()) {
             jet_nhf        -> push_back( jet->neutralHadronEnergyFraction());
             jet_chf        -> push_back( jet->chargedHadronEnergyFraction());
             jet_cemf       -> push_back( jet->chargedEmEnergyFraction());
@@ -148,15 +141,13 @@ void JetProducer::produce(const edm::Event &iEvent ) {
             jet_muf        -> push_back( jet->muonEnergyFraction());
             jet_cmult      -> push_back( jet->chargedMultiplicity());
             jet_nmult      -> push_back( jet->neutralMultiplicity());
-	    //}else {
-	//	jet_chf-> push_back(-1.0);
-	    //}
-            //std::cout<<"bdisc"<<jet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")<<std::endl;
+	    }else {
+	     	jet_chf-> push_back(-1.0);
+	    }
             jet_bTagCisvV2  ->push_back(jet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
 
             if( _detail > 1 ) {
 
-                //pfJetBProbabilityBJetTags, pfJetProbabilityBJetTags, pfTrackCountingHighEffBJetTags, pfSimpleSecondaryVertexHighEffBJetTags, pfSimpleInclusiveSecondaryVertexHighEffBJetTags, pfCombinedSecondaryVertexV2BJetTags, pfCombinedInclusiveSecondaryVertexV2BJetTags, softPFMuonBJetTags, softPFElectronBJetTags, pfCombinedMVAV2BJetTags, pfCombinedCvsLJetTags, pfCombinedCvsBJetTags, pfDeepCSVJetTags:probb, pfDeepCSVJetTags:probc, pfDeepCSVJetTags:probudsg, pfDeepCSVJetTags:probbb
 
                 jet_bTagCSV     ->push_back(jet->bDiscriminator("combinedSecondaryVertexBJetTags"));
                 jet_bTagCSVV1   ->push_back(jet->bDiscriminator("combinedSecondaryVertexV1BJetTags"));
