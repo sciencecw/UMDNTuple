@@ -41,6 +41,7 @@ void JetProducer::initialize( const std::string &prefix,
     _jetToken = jetTok;
     _detail = detail;
     _minPt = minPt;
+	std::cout<<"jetproducer::initialize "<<_minPt<<" "<<minPt<<std::endl;
 
     tree->Branch( (prefix + "_n" ).c_str(), &jet_n, (prefix + "_n/I" ).c_str() );
 
@@ -121,10 +122,14 @@ void JetProducer::produce(const edm::Event &iEvent ) {
         //const pat::Jet & jet = (*jetptr);
  
         if( jet->pt() < _minPt ) continue;
-        if( !jet->hasPFSpecific()) continue;
+	//std::cout<<"minpt"<<_minPt<<std::endl;
 
         jet_n += 1;
 
+	//std::cout<<"jetpt"<< jet->pt() <<std::endl;
+	//std::cout<<"jeteta"<< jet->eta() <<std::endl;
+	//std::cout<<"jetphi"<< jet->phi() <<std::endl;
+	//std::cout<<"jenergy"<< jet->energy() <<std::endl;
         jet_pt -> push_back( jet->pt() );
         jet_eta -> push_back( jet->eta() );
         jet_phi -> push_back( jet->phi() );
@@ -132,14 +137,21 @@ void JetProducer::produce(const edm::Event &iEvent ) {
 
         if( _detail > 0 ) {
 
+	    //std::cout<<"j_nod "<< jet->numberOfDaughters() <<std::endl;
+            jet_ndaughters -> push_back( jet->numberOfDaughters());
+
+            //if( jet->hasPFSpecific()) {
             jet_nhf        -> push_back( jet->neutralHadronEnergyFraction());
             jet_chf        -> push_back( jet->chargedHadronEnergyFraction());
-            jet_muf        -> push_back( jet->muonEnergyFraction());
             jet_cemf       -> push_back( jet->chargedEmEnergyFraction());
             jet_nemf       -> push_back( jet->neutralEmEnergyFraction());
+            jet_muf        -> push_back( jet->muonEnergyFraction());
             jet_cmult      -> push_back( jet->chargedMultiplicity());
             jet_nmult      -> push_back( jet->neutralMultiplicity());
-            jet_ndaughters -> push_back( jet->numberOfDaughters());
+	    //}else {
+	//	jet_chf-> push_back(-1.0);
+	    //}
+            //std::cout<<"bdisc"<<jet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")<<std::endl;
             jet_bTagCisvV2  ->push_back(jet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
 
             if( _detail > 1 ) {
@@ -161,8 +173,10 @@ void JetProducer::produce(const edm::Event &iEvent ) {
                 //JetAk04PartFlav_->push_back(jet.partonFlavour());
                 //JetAk04HadFlav_->push_back(jet.hadronFlavour());
 
-                jet_HFHadE->push_back(jet->HFHadronEnergy());
-                jet_HFEmE->push_back(jet->HFEMEnergy());
+            	if( jet->hasPFSpecific()) {
+                  jet_HFHadE->push_back(jet->HFHadronEnergy());
+                  jet_HFEmE->push_back(jet->HFEMEnergy());
+		}
             }
         }
     }
