@@ -7,7 +7,6 @@ Make a working directory,
 mkdir UMDNTuple
 ```
 
-Setup CMSSW_9_4_9_cand2 (Eventually we will probably use CMSSW_10X for full Run 2)
 ```
 cmsrel CMSSW_9_4_9_cand2
 
@@ -16,11 +15,11 @@ cd CMSSW_9_4_9_cand2/src
 cmsenv
 ```
 
-Merge the EgammaPostRecoTools for photon and electron objects (https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2016DataRecommendations)
+
 ```
 git cms-init
-git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
-scramv1 b -j 8
+git cms-merge-topic cms-egamma:EgammaID_949
+git cms-merge-topic lathomas:L1Prefiring_9_4_9
 ```
 
 This might take some time
@@ -31,7 +30,7 @@ git clone https://github.com/albertobelloni/UMDNTuple
 cd UMDNTuple
 git checkout legacy2016
 cd UMDNTuple
-scram b -j4
+scram b -j8
 ```
 
 ##To run the code
