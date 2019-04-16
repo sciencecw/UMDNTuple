@@ -28,7 +28,7 @@ Get the ntuplizer
 ```
 git clone https://github.com/albertobelloni/UMDNTuple
 cd UMDNTuple
-git checkout legacy2016
+git checkout 94X2017
 cd UMDNTuple
 scram b -j8
 ```
