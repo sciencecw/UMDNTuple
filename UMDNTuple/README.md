@@ -24,13 +24,13 @@ cd UMDNTuple
 scram b -j8
 ```
 
-##To run the code
+To run the code
 ```
 cd ${CMSSW_BASE}
 cmsRun src/UMDNTuple/UMDNTuple/run_production_cfg.py  isMC=1
 ```
 
-##To run with crab
+To run with crab
 
 ```
 python src/UMDNTuple/UMDNTuple/submit_crab.py --version 0228
