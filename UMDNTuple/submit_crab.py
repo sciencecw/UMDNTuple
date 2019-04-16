@@ -18,75 +18,17 @@ options = p.parse_args()
 
 
 data_samples = [ 
-    # re-reco B-G and prompt reco H (should not be used anymore)
-    #'/SingleElectron/Run2016B-23Sep2016-v2/MINIAOD',
-    #'/SingleElectron/Run2016B-23Sep2016-v3/MINIAOD',
-    #'/SingleElectron/Run2016C-23Sep2016-v1/MINIAOD',
-    #'/SingleElectron/Run2016D-23Sep2016-v1/MINIAOD',
-    #'/SingleElectron/Run2016E-23Sep2016-v1/MINIAOD',
-    #'/SingleElectron/Run2016F-23Sep2016-v1/MINIAOD',
-    #'/SingleElectron/Run2016G-23Sep2016-v1/MINIAOD',
-    #'/SingleElectron/Run2016H-PromptReco-v1/MINIAOD',
-    #'/SingleElectron/Run2016H-PromptReco-v2/MINIAOD',
-    #'/SingleElectron/Run2016H-PromptReco-v3/MINIAOD',
-    #'/SingleMuon/Run2016B-23Sep2016-v1/MINIAOD',
-    #'/SingleMuon/Run2016B-23Sep2016-v3/MINIAOD',
-    #'/SingleMuon/Run2016C-23Sep2016-v1/MINIAOD',
-    #'/SingleMuon/Run2016D-23Sep2016-v1/MINIAOD',
-    #'/SingleMuon/Run2016E-23Sep2016-v1/MINIAOD',
-    #'/SingleMuon/Run2016F-23Sep2016-v1/MINIAOD',
-    #'/SingleMuon/Run2016G-23Sep2016-v1/MINIAOD',
-    #'/SingleMuon/Run2016H-PromptReco-v1/MINIAOD',
-    #'/SingleMuon/Run2016H-PromptReco-v2/MINIAOD',
-    #'/SingleMuon/Run2016H-PromptReco-v3/MINIAOD',
-
-    # re-miniAOD (should not be used anymore)
-    #'/SingleElectron/Run2016B-03Feb2017_ver2-v2/MINIAOD', 
-    #'/SingleElectron/Run2016C-03Feb2017-v1/MINIAOD',
-    #'/SingleElectron/Run2016D-03Feb2017-v1/MINIAOD',
-    #'/SingleElectron/Run2016E-03Feb2017-v1/MINIAOD',
-    #'/SingleElectron/Run2016F-03Feb2017-v1/MINIAOD',
-    #'/SingleElectron/Run2016G-03Feb2017-v1/MINIAOD',
-    #'/SingleElectron/Run2016H-03Feb2017_ver2-v1/MINIAOD',
-    #'/SingleElectron/Run2016H-03Feb2017_ver3-v1/MINIAOD',
-    #'/SingleMuon/Run2016B-03Feb2017_ver2-v2/MINIAOD',
-    #'/SingleMuon/Run2016C-03Feb2017-v1/MINIAOD',
-    #'/SingleMuon/Run2016D-03Feb2017-v1/MINIAOD',
-    #'/SingleMuon/Run2016E-03Feb2017-v1/MINIAOD',
-    #'/SingleMuon/Run2016F-03Feb2017-v1/MINIAOD',
-    #'/SingleMuon/Run2016G-03Feb2017-v1/MINIAOD',
-    #'/SingleMuon/Run2016H-03Feb2017_ver2-v1/MINIAOD',
-    #'/SingleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD',
-
-    # legacy re-reco
-    #'/SingleMuon/Run2016B-07Aug17_ver1-v1/MINIAOD',
-    #'/SingleMuon/Run2016B-07Aug17_ver2-v1/MINIAOD',      
-    #'/SingleMuon/Run2016C-07Aug17-v1/MINIAOD',             
-    #'/SingleMuon/Run2016D-07Aug17-v1/MINIAOD',             
-    #'/SingleMuon/Run2016E-07Aug17-v1/MINIAOD',             
-    #'/SingleMuon/Run2016F-07Aug17-v1/MINIAOD',             
-    #'/SingleMuon/Run2016G-07Aug17-v1/MINIAOD',             
-    #'/SingleMuon/Run2016H-07Aug17-v1/MINIAOD',             
-    #'/SingleElectron/Run2016B-07Aug17_ver1-v1/MINIAOD',
-    #'/SingleElectron/Run2016B-07Aug17_ver2-v2/MINIAOD',
-    #'/SingleElectron/Run2016C-07Aug17-v1/MINIAOD',
-    #'/SingleElectron/Run2016D-07Aug17-v1/MINIAOD',
-    #'/SingleElectron/Run2016E-07Aug17-v1/MINIAOD',
-    #'/SingleElectron/Run2016F-07Aug17-v1/MINIAOD',
-    #'/SingleElectron/Run2016G-07Aug17-v1/MINIAOD',
-    #'/SingleElectron/Run2016H-07Aug17-v1/MINIAOD',
-
     # 2017
     '/SingleMuon/Run2017B-31Mar2018-v1/MINIAOD',
-   # '/SingleMuon/Run2017C-31Mar2018-v1/MINIAOD',
-   # '/SingleMuon/Run2017D-31Mar2018-v1/MINIAOD',
-   # '/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD',
-   # '/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD',
+    '/SingleMuon/Run2017C-31Mar2018-v1/MINIAOD',
+    '/SingleMuon/Run2017D-31Mar2018-v1/MINIAOD',
+    '/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD',
+    '/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD',
     '/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD',
-   # '/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD',
-   # '/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD',
-   # '/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD',
-   # '/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD',
+    '/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD',
+    '/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD',
+    '/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD',
+    '/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD',
 
 ]
 
@@ -123,15 +65,6 @@ mc_samples = [
     #('/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v3/MINIAODSIM', True),
     #('/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM', True),
 
-
-    #('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/MINIAODSIM', False ),
-    #('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM', True  ),
-    #('/DiPhotonJets_MGG-80toInf_13TeV_amcatnloFXFX_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
 
      ###   2017 signal samples
      #('/MadGraphChargedResonance_WGToLNuG_M1000_width0p01/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',True ),
@@ -185,125 +118,6 @@ mc_samples = [
      #('/PythiaChargedResonance_WGToLNuG_M500_width5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',False),
      #('/PythiaChargedResonance_WGToLNuG_M600_width5/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',False),
      #('/PythiaChargedResonance_WGToLNuG_M800_width0p01/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',False),
-    ### 2016 signal
-    #('/MadGraphChargedResonance_WGToLNu_M1000_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1000_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1200_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1200_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1400_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1400_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1600_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1600_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1800_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M1800_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2000_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2000_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M200_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M200_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2200_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2200_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2400_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2400_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M250_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M250_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2600_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2600_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2800_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M2800_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M3000_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M300_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M300_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M3500_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M3500_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M350_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M350_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M4000_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M4000_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M400_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M400_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M450_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M450_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M500_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M500_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M600_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M600_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M700_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M700_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M800_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M800_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M900_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/MadGraphChargedResonance_WGToLNu_M900_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/PythiaChargedResonance_WGToLNu_M1000_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1000_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1200_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1200_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1400_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1400_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1600_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1600_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1800_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M1800_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2000_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2000_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M200_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M200_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2200_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2200_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2400_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2400_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M250_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M250_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2600_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2600_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2800_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M2800_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M3000_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M3000_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M300_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M300_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M3500_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M3500_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M350_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M4000_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M4000_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M400_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M400_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M450_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M450_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M500_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M500_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M600_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M600_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M700_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M700_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M800_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M800_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M900_width0p01/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/PythiaChargedResonance_WGToLNu_M900_width5/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM', False ),
-    #('/WGToLNuG_PtG-130_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/WGToLNuG_PtG-130_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/WGToLNuG_PtG-500_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/WGToLNuG_PtG-500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM', True ),
-    #('/WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM', True ),
-    #('/WWTo2L2Nu_13TeV-powheg/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', False ),
-    #('/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/WZG_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM', True ),
-    #('/ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM', True ),
 ]
 
 json_path = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt'
@@ -334,15 +148,12 @@ for path in data_samples :
     file_entries.append( 'config.General.transferLogs = False' )
     file_entries.append( '' )
     file_entries.append( 'config.JobType.pluginName = "Analysis"' )
-    #file_entries.append( 'config.JobType.psetName = "run_production_cfg.py"' )
     file_entries.append( 'config.JobType.psetName = "src/UMDNTuple/UMDNTuple/run_production_cfg.py"')
     file_entries.append( 'config.JobType.pyCfgParams = ["isMC=0"]' )
     file_entries.append( '' )
     file_entries.append( 'config.Data.inputDataset = "%s"' %path )
-    #file_entries.append( 'config.Data.splitting = "LumiBased"' )
-    #file_entries.append( 'config.Data.unitsPerJob = 300' )
-    file_entries.append('config.Data.splitting = "Automatic"')
-    file_entries.append('config.Data.unitsPerJob = 200')
+    file_entries.append( 'config.Data.splitting = "LumiBased"' )
+    file_entries.append( 'config.Data.unitsPerJob = 30' )
     file_entries.append( 'config.Data.outLFNDirBase = "%s"' %options.outputPath)
     file_entries.append( 'config.Data.publication = False' )
     file_entries.append( 'config.Data.outputDatasetTag = "UMDNTuple_%s"' %options.version )
@@ -377,18 +188,14 @@ for path, useEventWeights in mc_samples:
     file_entries.append('config.General.transferOutputs = True')
     file_entries.append('config.General.transferLogs = False')
     file_entries.append('config.JobType.pluginName = "Analysis"')
-    #file_entries.append('config.JobType.psetName = "run_production_cfg.py"')
     file_entries.append('config.JobType.psetName = "src/UMDNTuple/UMDNTuple/run_production_cfg.py"')
     file_entries.append('config.Data.outLFNDirBase = "%s"' %options.outputPath)
     file_entries.append('config.Data.publication = False')
     file_entries.append('config.Site.storageSite = "%s"' %options.site)
     file_entries.append('config.Data.outputDatasetTag= "UMDNTuple_%s"' %options.version)
     file_entries.append('config.JobType.pyCfgParams = ["isMC=1","disableEventWeights=%d"]' %(not useEventWeights))
-    #file_entries.append('config.JobType.inputFiles= "L1PrefiringMaps_new.root"') 
     file_entries.append('config.General.requestName = "production_%s_%s"' %(options.version, base_name))
     file_entries.append('config.Data.inputDataset = "%s"' %path)
-    #file_entries.append('config.Data.splitting = "FileBased"')
-    #file_entries.append('config.Data.unitsPerJob = 10')
     file_entries.append('config.Data.splitting = "Automatic"')
     file_entries.append('config.Data.unitsPerJob = 200')
 
