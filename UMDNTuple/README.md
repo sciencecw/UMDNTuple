@@ -1,11 +1,4 @@
-#Setup for 2016 data analysis
 
------------------------ YOU CAN SIMPLY COPY-PASTE THIS RECIPE  ------------------------
-
-Make a working directory,
-```
-mkdir UMDNTuple
-```
 
 ```
 cmsrel CMSSW_9_4_9_cand2
