@@ -20,10 +20,8 @@ Merge the EgammaPostRecoTools for photon and electron objects (https://twiki.cer
 ```
 git cms-init
 git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
-scramv1 b -j 8
+git cms-merge-topic lathomas:L1Prefiring_9_4_9
 ```
-
-This might take some time
 
 Get the ntuplizer
 ```
