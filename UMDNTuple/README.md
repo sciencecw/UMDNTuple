@@ -9,7 +9,8 @@ cmsenv
 Check out the necessary tools and patches
 ```
 git cms-init
-git cms-merge-topic cms-egamma:EgammaID_949
+git cms-merge-topic cms-egamma:EgammaID_949  ## this is not necessary after CMMSW94_13
+git cms-merge-topic cms-egamma:EgammaPostRecoTools
 git cms-merge-topic lathomas:L1Prefiring_9_4_9
 ```
 
