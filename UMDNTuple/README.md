@@ -13,7 +13,6 @@ https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes
 ```
 git cms-init
 git cms-merge-topic cms-egamma:EgammaPostRecoTools
-git cms-merge-topic lathomas:L1Prefiring_9_4_9
 ```
 
 Get the ntuplizer
