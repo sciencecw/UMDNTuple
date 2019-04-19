@@ -1,25 +1,18 @@
 #Setup for 2016 data analysis
 
------------------------ YOU CAN SIMPLY COPY-PASTE THIS RECIPE  ------------------------
 
-Make a working directory,
+Setup CMSSW
 ```
-mkdir UMDNTuple
-```
-
-Setup CMSSW_9_4_9_cand2 (Eventually we will probably use CMSSW_10X for full Run 2)
-```
-cmsrel CMSSW_9_4_9_cand2
-
-cd CMSSW_9_4_9_cand2/src
-
+cmsrel CMSSW_9_4_13
+cd CMSSW_9_4_13/src
 cmsenv
 ```
 
-Merge the EgammaPostRecoTools for photon and electron objects (https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2016DataRecommendations)
+Merge the EgammaPostRecoTools for photon and electron objects https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2016DataRecommendations
+https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes
 ```
 git cms-init
-git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
+git cms-merge-topic cms-egamma:EgammaPostRecoTools
 git cms-merge-topic lathomas:L1Prefiring_9_4_9
 ```
 
