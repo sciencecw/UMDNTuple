@@ -108,10 +108,12 @@ if opt.year == 2016:
 	dataGlobalTag = '94X_dataRun2_v10'
 	mcGlobalTag = '94X_mcRun2_asymptotic_v3'
     egamma_era='2016-Legacy'
+	prefire_era="2016BtoH"
 if opt.year == 2017:
  	dataGlobalTag = '94X_dataRun2_v11'
 	mcGlobalTag = '94X_mc2017_realistic_v17'
     egamma_era='2017-Nov17ReReco'
+	prefire_era="2017BtoF"
 
 if opt.isMC == 1:
   process.GlobalTag = GlobalTag(process.GlobalTag, mcGlobalTag, '')
@@ -422,15 +424,14 @@ filter_map = cms.untracked.vstring(
     '101:Flag_BadPFMuonFilter',
 )
 
-process.prefiringweight = cms.EDProducer("L1ECALPrefiringWeightProducer",
-                                 ThePhotons = cms.InputTag("slimmedPhotons"),
-	                         TheJets = cms.InputTag("slimmedJets"),
-                                 L1Maps = cms.string("src/L1Prefiring/EventWeightProducer/files/L1PrefiringMaps_new.root"), # update this line with the location of this file
-                                 DataEra = cms.string("2016BtoH"),
-                                 #DataEra = cms.string("2017BtoF"), #Use 2016BtoH for 2016
-                                 UseJetEMPt = cms.bool(False), #can be set to true to use jet prefiring maps parametrized vs pt(em) instead of pt
-	                         PrefiringRateSystematicUncty = cms.double(0.2) #Minimum relative prefiring uncty per object
-                                 )
+
+from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
+process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
+    DataEra = cms.string(prefire_era),
+    UseJetEMPt = cms.bool(False),
+    PrefiringRateSystematicUncty = cms.double(0.2),
+    SkipWarnings = False)
+
 if opt.year == 2016:
         elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-veto")
         elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-loose")
@@ -522,7 +523,6 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
 
 process.p = cms.Path()
 
-#process.p += process.selectedElectrons
 process.p += process.egammaPostRecoSeq
 # run additional MET filters
 process.p += process.BadPFMuonFilter
