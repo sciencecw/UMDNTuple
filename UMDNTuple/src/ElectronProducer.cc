@@ -348,7 +348,7 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
 
             el_charge -> push_back(el->charge());
             el_sc_eta->push_back(el->superCluster()->eta());
-            el_sc_eta->push_back(el->superCluster()->energy());
+            el_sc_e->push_back(el->superCluster()->energy());
 
             if( _detail > 1 ) {
 
