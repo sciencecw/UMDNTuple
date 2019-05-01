@@ -33,6 +33,7 @@ ElectronProducer::ElectronProducer(  ) :
     el_dEtaClusterTrack (0),
     el_dPhiClusterTrack (0),
     el_sc_rawE(0),
+    el_sc_e(0),
     el_ecalIso(0),
     el_ecalPfIso(0),
     el_aeff(0),
