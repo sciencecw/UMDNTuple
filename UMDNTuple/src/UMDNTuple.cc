@@ -30,6 +30,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     }
 
     _isMC = iConfig.getUntrackedParameter<int>("isMC");
+    _doPref = iConfig.getUntrackedParameter<bool>("doPref");
 
     bool disableEventWeights = false;
     if( iConfig.exists("disableEventWeights" ) ) {
@@ -229,7 +230,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     _eventProducer.initialize( verticesToken, puToken, 
                                generatorToken, lheEventToken, lheRunToken,
                                rhoToken, prefweight_token, prefweightup_token, prefweightdown_token,
- 			       _myTree, _weightInfoTree, _isMC );
+ 			       _myTree, _weightInfoTree, _isMC , _doPref);
 
     if(disableEventWeights ) {
         _eventProducer.disableEventWeights();

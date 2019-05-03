@@ -74,6 +74,7 @@ private :
   bool _produceGen;
 
   int _isMC;
+  bool _doPref;
 
 };
 #endif
