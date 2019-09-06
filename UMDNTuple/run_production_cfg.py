@@ -23,8 +23,11 @@ opt.inputFiles = [
     #'/store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/40000/B4C84D02-5242-E811-AA60-008CFA197A60.root', # DY MC 2017
     #'/store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/40000/04F71189-4742-E811-AA48-008CFAC9157C.root',
     #'file:/afs/cern.ch/user/k/kawong/UMDNTuple/CMSSW_9_4_9_cand2/src/UMDNTuple/UMDNTuple/04F71189-4742-E811-AA48-008CFAC9157C.root',
-    'file:/eos/cms/store/user/kawong/40BCA89D-2C38-E811-9682-008CFAC93CF8.root',
+    #'file:/eos/cms/store/user/kawong/40BCA89D-2C38-E811-9682-008CFAC93CF8.root',
     #'/store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/PU2017RECOSIMstep_12Apr2018_94X_mc2017_realistic_v14-v1/910000/ECC11159-F647-E811-A157-001E67792510.root', # DY MC 2017 Madgraph RecoSIM step
+
+	#'/store/mc/RunIIAutumn18MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/90000/F46D8BF5-1BDE-464A-A523-D14E2C06D6C6.root', # DY 2018
+	'file:/eos/cms/store/user/kawong/F46D8BF5-1BDE-464A-A523-D14E2C06D6C6.root', #DY 2018 local on lxplus eos
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/00622F98-20EB-E611-A0A4-28924A33AFF6.root'
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SingleElectronMiniAOD/FA3923C7-878E-E711-A8BE-0CC47A7C3420.root '
     #'file:/afs/cern.ch/work/y/yofeng/public/WGamma/SignalMiniAOD/FEAAD8B5-E7FC-E611-81C1-008CFA197B74.root'
@@ -103,12 +106,9 @@ process.BadChargedCandidateFilter.taggingMode = cms.bool( True )
 #------------------------------------
 #Condition DB tag
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
-#dataGlobalTag = '80X_dataRun2_2016SeptRepro_v7'
-dataGlobalTag = '94X_dataRun2_v11'
-#mcGlobalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v3'
-#mcGlobalTag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'
-#mcGlobalTag= '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
-mcGlobalTag = '94X_mc2017_realistic_v14'
+dataGlobalTag = '102X_dataRun2_Sep2018ABC_v2'	## 2018ABC
+#dataGlobalTag = '102X_dataRun2_Prompt_v13' 		## 2018D
+mcGlobalTag = '102X_upgrade2018_realistic_v18'
 
 if opt.isMC == 1:
   process.GlobalTag = GlobalTag(process.GlobalTag, mcGlobalTag, '')
@@ -119,11 +119,8 @@ else:
 #------------------------------------
 # load Egamma id
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-setupEgammaPostRecoSeq(process, applyEnergyCorrections=False,
-                       applyVIDOnCorrectedEgamma=False,
-                       isMiniAOD=True,
-                       runVID=True,
-                       era='2017-Nov17ReReco')  #era is new to select between 2016 / 2017,  it defaults to 2017
+setupEgammaPostRecoSeq(process,
+                       era='2018-Prompt')  
 #a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
 
 #--------------------------------------------
@@ -155,7 +152,7 @@ trigger_map = cms.untracked.vstring(
     '23:HLT_Ele28_eta2p1_WPTight_Gsf_HT150',
     '24:HLT_Ele27_WPTight_Gsf',  
     '25:HLT_Ele30_eta2p1_WPTight_Gsf_CentralPFJet35_EleCleaned',
-    '26:HLT_Ele32_WPTight_Gsf',
+    '26:HLT_Ele32_WPTight_Gsf', # intended trigger
     '27:HLT_Ele32_WPTight_Gsf_L1DoubleEG',
     '28:HLT_Ele35_WPTight_Gsf', # intended trigger
     '29:HLT_Ele35_WPTight_Gsf_L1EGMT',
@@ -270,16 +267,16 @@ filter_map = cms.untracked.vstring(
     '101:Flag_BadPFMuonFilter',
 )
 
-process.prefiringweight = cms.EDProducer("L1ECALPrefiringWeightProducer",
-                                 ThePhotons = cms.InputTag("slimmedPhotons"),
-	                         TheJets = cms.InputTag("slimmedJets"),
-                                 L1Maps = cms.string("src/L1Prefiring/EventWeightProducer/data/L1PrefiringMaps_new.root"), # update this line with the location of this file
-                                 #L1Maps = cms.string("L1PrefiringMaps_new.root"), # update this line with the location of this file
-                                 DataEra = cms.string("2017BtoF"), #Use 2016BtoH for 2016
-                                 #DataEra = cms.string("2016BtoH"),
-                                 UseJetEMPt = cms.bool(False), #can be set to true to use jet prefiring maps parametrized vs pt(em) instead of pt
-	                         PrefiringRateSystematicUncty = cms.double(0.2) #Minimum relative prefiring uncty per object
-                                 )
+#process.prefiringweight = cms.EDProducer("L1ECALPrefiringWeightProducer",
+#                                 ThePhotons = cms.InputTag("slimmedPhotons"),
+#	                         TheJets = cms.InputTag("slimmedJets"),
+#                                 L1Maps = cms.string("src/L1Prefiring/EventWeightProducer/data/L1PrefiringMaps_new.root"), # update this line with the location of this file
+#                                 #L1Maps = cms.string("L1PrefiringMaps_new.root"), # update this line with the location of this file
+#                                 DataEra = cms.string("2017BtoF"), #Use 2016BtoH for 2016
+#                                 #DataEra = cms.string("2016BtoH"),
+#                                 UseJetEMPt = cms.bool(False), #can be set to true to use jet prefiring maps parametrized vs pt(em) instead of pt
+#	                         PrefiringRateSystematicUncty = cms.double(0.2) #Minimum relative prefiring uncty per object
+#                                 )
 
 process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronTag = cms.untracked.InputTag('slimmedElectrons'),
@@ -317,6 +314,8 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     #conversionsTag = cms.untracked.InputTag('allConversions' ),
     verticesTag  = cms.untracked.InputTag('offlineSlimmedPrimaryVertices'),
     rhoTag  = cms.untracked.InputTag('fixedGridRhoFastjetAll'),
+	
+	doPref = cms.untracked.bool(False),  #no prefiring weights for 2018
     prefTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProb'),
     prefupTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProbUp'),
     prefdownTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProbDown'),
@@ -359,7 +358,7 @@ process.p += process.egammaPostRecoSeq
 # run additional MET filters
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
-if opt.isMC: process.p += process.prefiringweight
+#if opt.isMC: process.p += process.prefiringweight
 
 process.p += process.UMDNTuple
 

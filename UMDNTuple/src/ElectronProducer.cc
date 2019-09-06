@@ -30,6 +30,7 @@ ElectronProducer::ElectronProducer(  ) :
     el_expectedMissingInnerHits(0),
     el_charge(0),
     el_sc_eta(0),
+    el_sc_e(0),
     el_dEtaClusterTrack (0),
     el_dPhiClusterTrack (0),
     el_sc_rawE(0),
@@ -103,6 +104,7 @@ void ElectronProducer::initialize( const std::string &prefix,
         tree->Branch( (prefix + "_expectedMissingInnerHits").c_str(), &el_expectedMissingInnerHits );
         tree->Branch( (prefix + "_charge").c_str(), &el_charge );
         tree->Branch( (prefix + "_sc_eta").c_str(), &el_sc_eta );
+        tree->Branch( (prefix + "_sc_e").c_str(), &el_sc_e );
 
 
         if( detail > 1 ) {
@@ -206,6 +208,7 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
         el_expectedMissingInnerHits->clear();
         el_charge ->clear();
         el_sc_eta->clear();
+        el_sc_e->clear();
 
         if( _detail > 1 ) {
 
@@ -346,6 +349,7 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
 
             el_charge -> push_back(el->charge());
             el_sc_eta->push_back(el->superCluster()->eta());
+            el_sc_e->push_back(el->superCluster()->energy());
 
             if( _detail > 1 ) {
 

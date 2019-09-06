@@ -27,7 +27,7 @@ class EventInfoProducer {
                         const edm::EDGetTokenT<double> & ,
                         const edm::EDGetTokenT<double> & ,
                         const edm::EDGetTokenT<double> & ,
-			 TTree *, TTree *, bool);
+			 TTree *, TTree *, bool, bool);
 
         void disableEventWeights() {_disableEventWeights=true;}
         void produce(const edm::Event &iEvent );
@@ -70,6 +70,7 @@ class EventInfoProducer {
 
         TTree * _infoTree;
         bool _isMC;
+        bool _doPref;
         bool _disableEventWeights;
 };
 #endif

@@ -19,6 +19,7 @@ EventInfoProducer::EventInfoProducer(  ) :
     prefweightdown(0),
     _infoTree(0),
     _isMC(0),
+	_doPref(0),
     _disableEventWeights(0)
 
 {
@@ -35,7 +36,7 @@ void EventInfoProducer::initialize(
                         const edm::EDGetTokenT< double >&prefTok,
                         const edm::EDGetTokenT< double >&prefupTok,
                         const edm::EDGetTokenT< double >&prefdownTok,
-                        TTree *tree, TTree *infoTree, bool isMC) {
+                        TTree *tree, TTree *infoTree, bool isMC, bool doPref) {
 
     _vertexToken = vtxTok;
     _puToken = puTok;
@@ -47,6 +48,8 @@ void EventInfoProducer::initialize(
     _prefweightup_token = prefupTok;
     _prefweightdown_token = prefdownTok;
     _isMC = isMC;
+	_doPref = doPref;
+
 
 
     tree -> Branch( "isData", &isData, "isData/O" );
@@ -59,9 +62,11 @@ void EventInfoProducer::initialize(
     tree -> Branch( "rho", &rho, "rho/F");
 
     if( _isMC ) {
-    	tree -> Branch( "prefweight", &prefweight, "prefweight/F"); // should be run with MC only?
-    	tree -> Branch( "prefweightup", &prefweightup, "prefweightup/F");
-    	tree -> Branch( "prefweightdown", &prefweightdown, "prefweightdown/F");
+    	if ( _doPref )	{
+			tree -> Branch( "prefweight", &prefweight, "prefweight/F"); // should be run with MC only?
+    		tree -> Branch( "prefweightup", &prefweightup, "prefweightup/F");
+    		tree -> Branch( "prefweightdown", &prefweightdown, "prefweightdown/F");
+		}
         tree -> Branch( "truepu_n", &truepu_n, "truepu_n/I");
         tree -> Branch( "EventWeights", &EventWeights);
         tree -> Branch( "pdf_id1", &pdf_id1, "pdf_id1/F");
@@ -102,8 +107,7 @@ void EventInfoProducer::produce(const edm::Event &iEvent ) {
     edm::Handle<double>   rho_h;
     iEvent.getByToken(_rhoToken, rho_h);
 
-    if (_isMC){
-
+    if (_isMC && _doPref ){
        edm::Handle< double > theprefweight;
        edm::Handle< double > theprefweightup;
        edm::Handle< double > theprefweightdown;
