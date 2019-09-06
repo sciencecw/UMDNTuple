@@ -120,11 +120,7 @@ else:
 # load Egamma id
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
-					   #applyEnergyCorrections=False,
-                       #applyVIDOnCorrectedEgamma=False,
-                       #isMiniAOD=True,
-                       #runVID=True,
-                       era='2018-Prompt')  # 2018 prompt?
+                       era='2018-Prompt')  
 #a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
 
 #--------------------------------------------
