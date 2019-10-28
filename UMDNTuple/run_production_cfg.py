@@ -1,15 +1,14 @@
 import FWCore.ParameterSet.Config as cms
+from Configuration.StandardSequences.Eras import eras
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 import re
-
-process = cms.Process("UMDNTuple")
 
 # setup 'analysis'  options
 opt = VarParsing.VarParsing ('analysis')
 
 opt.register('isMC', -1, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, 'Flag indicating if the input samples are from MC (1) or from the detector (0).')
-opt.register('year', 2016, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, 'Flag indicating run year (2016-2018). Default to 2016. ')
+opt.register('year', '2016', VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.string, 'Flag indicating run year (2016-2018,2018D). Default to 2016. ')
 opt.register('nEvents', 1000, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, 'Number of events to analyze')
 opt.register('disableEventWeights', 0, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.bool, 'Set to 1 to disable event weights')
 
@@ -45,6 +44,15 @@ opt.inputFiles = [
 #opt.nEvents = 1000
 opt.disableEventWeights = 0
 opt.parseArguments()
+
+era = {
+  '2016': eras.Run2_2016,
+  '2017': eras.Run2_2017,
+  '2018': eras.Run2_2018,
+  '2018D': eras.Run2_2018,
+}
+
+process = cms.Process("UMDNTuple", era[opt.year])
 
 process.source = cms.Source("PoolSource",
                             fileNames =  cms.untracked.vstring(opt.inputFiles))
@@ -110,20 +118,22 @@ process.BadChargedCandidateFilter.taggingMode = cms.bool( True )
 #------------------------------------
 #Condition DB tag
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
-if opt.year == 2016: 
-	dataGlobalTag = '94X_dataRun2_v10'
-	mcGlobalTag = '94X_mcRun2_asymptotic_v3'
+if opt.year == '2016': 
+	dataGlobalTag = '102X_dataRun2_v15'
+	mcGlobalTag = '102X_mcRun2_asymptotic_v7'
 	egamma_era='2016-Legacy'
 	prefire_era="2016BtoH"
-if opt.year == 2017:
-	dataGlobalTag = '94X_dataRun2_v11'
-	mcGlobalTag = '94X_mc2017_realistic_v17'
+if opt.year == '2017':
+	dataGlobalTag = '102X_dataRun2_v15'
+	mcGlobalTag = '102X_mc2017_realistic_v7'
 	egamma_era='2017-Nov17ReReco'
 	prefire_era="2017BtoF"
-if opt.year == 2018:
-	dataGlobalTag = '102X_dataRun2_Sep2018ABC_v2'	## 2018ABC
-	#dataGlobalTag = '102X_dataRun2_Prompt_v13' 		## 2018D
-	mcGlobalTag = '102X_upgrade2018_realistic_v18'
+if opt.year == '2018':
+	dataGlobalTag = '102X_dataRun2_v15'	## 2018ABC
+	mcGlobalTag = '102X_upgrade2018_realistic_v19'
+if opt.year == '2018D':
+	dataGlobalTag = '102X_dataRun2_Prompt_v15' 		## 2018D
+	mcGlobalTag = '102X_upgrade2018_realistic_v19'
 
 if opt.isMC == 1:
   process.GlobalTag = GlobalTag(process.GlobalTag, mcGlobalTag, '')
@@ -134,24 +144,24 @@ else:
 #------------------------------------
 # load Egamma id
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-if opt.year == 2016:
+if opt.year == '2016':
 	setupEgammaPostRecoSeq(process, 
 						applyEnergyCorrections=False,
                        	era=egamma_era)  #era is new to select between 2016 / 2017,  it defaults to 2017
-if opt.year == 2017:
+if opt.year == '2017':
 	setupEgammaPostRecoSeq(process,
                        	runVID=False, ##saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
                        	era=egamma_era)
-if opt.year == 2018:
+if opt.year in ['2018', '2018D']:
   setupEgammaPostRecoSeq(process,
-                         era='2018-Prompt')  
+                         era='2018-Prompt')  #TODO: to be checked
 #a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
 
 #--------------------------------------------
 
 #--------------------------------------------
 # define the triggers that we want to save
-if opt.year in [2017, 2018]:
+if opt.year in ['2017', '2018', '2018D']:
   trigger_map = cms.untracked.vstring( 
     # Muon triggers
     '0:HLT_Mu8', 
@@ -267,7 +277,7 @@ if opt.year in [2017, 2018]:
     '132:HLT_DoublePhoton85',
     )
 
-if opt.year == 2016: 
+if opt.year == '2016': 
 	trigger_map = cms.untracked.vstring( 
     # Muon triggers
     '0:HLT_Mu8',
@@ -449,7 +459,7 @@ filter_map = cms.untracked.vstring(
 #	                         PrefiringRateSystematicUncty = cms.double(0.2) #Minimum relative prefiring uncty per object
 #                                 )
 
-if opt.year in [2016, 2017]:
+if opt.year in ['2016', '2017']:
   from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
   process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
       DataEra = cms.string(prefire_era),
