@@ -55,9 +55,9 @@ PhotonProducer::PhotonProducer(  ) :
     ph_E2x5Full5x5(0),
     ph_E3x3Full5x5(0),
     ph_E5x5Full5x5(0),
-    _effectiveAreasCH(edm::FileInPath("UMDNTuple/UMDNTuple/data/effAreaPhotons_ChargedHadrons_80X.txt").fullPath()),
-    _effectiveAreasNH(edm::FileInPath("UMDNTuple/UMDNTuple/data/effAreaPhotons_NeutralHadrons_80X.txt").fullPath()),
-    _effectiveAreasPH(edm::FileInPath("UMDNTuple/UMDNTuple/data/effAreaPhotons_Photons_80X.txt").fullPath()),
+    _effectiveAreasCH(edm::FileInPath("UMDNTuple/UMDNTuple/data/effAreaPhotons_cone03_pfChargedHadrons_90percentBased_V2.txt").fullPath()),
+    _effectiveAreasNH(edm::FileInPath("UMDNTuple/UMDNTuple/data/effAreaPhotons_cone03_pfNeutralHadrons_90percentBased_V2.txt").fullPath()),
+    _effectiveAreasPH(edm::FileInPath("UMDNTuple/UMDNTuple/data/effAreaPhotons_cone03_pfPhotons_90percentBased_V2.txt").fullPath()),
     _detail(0),
     _tree(0)
 {

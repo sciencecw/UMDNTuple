@@ -49,7 +49,7 @@ ElectronProducer::ElectronProducer(  ) :
     el_ecalRecHitSumEt(0),
     el_hcalTowerSumEt(0),
     //_effectiveAreas("data/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_80X.txt"),
-    _effectiveAreas( edm::FileInPath("UMDNTuple/UMDNTuple/data/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_80X.txt").fullPath() ),
+    _effectiveAreas( edm::FileInPath("UMDNTuple/UMDNTuple/data/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt").fullPath() ),
     _detail(99)
 {
 
