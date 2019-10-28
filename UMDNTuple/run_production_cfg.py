@@ -457,22 +457,13 @@ if opt.year in [2016, 2017]:
       PrefiringRateSystematicUncty = cms.double(0.2),
       SkipWarnings = False)
 
-if opt.year == 2016:
-        elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-veto")
-        elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-loose")
-        elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-medium")
-        elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Summer16-80X-V1-tight")
-        phoIdLooseStr  = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-loose")
-        phoIdMediumStr = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-medium")
-        phoIdTightStr  = cms.untracked.string("cutBasedPhotonID-Spring16-V2p2-tight")
-if opt.year in [2017, 2018]:
-        elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-veto")
-        elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-loose")
-        elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-medium")
-        elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-tight")
-        phoIdLooseStr  = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-loose")
-        phoIdMediumStr = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-medium")
-        phoIdTightStr  = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-tight")
+elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-veto")
+elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-loose")
+elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-medium")
+elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-tight")
+phoIdLooseStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-loose")
+phoIdMediumStr     = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-medium")
+phoIdTightStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-tight")
 
 process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronTag = cms.untracked.InputTag('slimmedElectrons'),
