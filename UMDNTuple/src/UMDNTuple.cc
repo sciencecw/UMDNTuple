@@ -1,7 +1,7 @@
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "UMDNTuple/UMDNTuple/interface/UMDNTuple.h"
 #include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/one/EDAnalyzer.h"
+#include "FWCore/Framework/interface/EDAnalyzer.h"
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
@@ -144,6 +144,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     edm::EDGetTokenT<std::vector<reco::Vertex> > verticesToken;
     edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puToken;
     edm::EDGetTokenT<GenEventInfoProduct> generatorToken;
+    edm::EDGetTokenT<GenLumiInfoHeader> genLumiInfoToken;
     edm::EDGetTokenT<double> prefToken;
     edm::EDGetTokenT<double> rhoToken;
     edm::EDGetTokenT<double> prefweight_token;
@@ -171,6 +172,10 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     if( iConfig.exists("generatorTag") ) {
         generatorToken = consumes<GenEventInfoProduct>(
                  iConfig.getUntrackedParameter<edm::InputTag>("generatorTag"));
+    }
+    if( iConfig.exists("genheaderTag") ) {
+        genLumiInfoToken = consumes<GenLumiInfoHeader, edm::InLumi>(
+                 iConfig.getUntrackedParameter<edm::InputTag>("genheaderTag"));
     }
     if( iConfig.exists("rhoTag") ) {
         rhoToken = consumes<double>(
@@ -233,7 +238,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
 
     // Event information
     _eventProducer.initialize( verticesToken, puToken, 
-                               generatorToken, lheEventToken, lheRunToken,
+                               generatorToken, genLumiInfoToken, lheEventToken, lheRunToken,
                                rhoToken, prefweight_token, prefweightup_token, prefweightdown_token,
  			       _myTree, _weightInfoTree, _isMC , _doPref);
 
@@ -400,6 +405,12 @@ void UMDNTuple::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
 }
 
 void UMDNTuple::endJob() {
+
+}
+
+void UMDNTuple::beginLuminosityBlock( edm::LuminosityBlock const& iLumi, edm::EventSetup const&) {
+
+  _eventProducer.beginLuminosityBlock( iLumi );
 
 }
 

@@ -467,13 +467,13 @@ if opt.year in ['2016', '2017']:
       PrefiringRateSystematicUncty = cms.double(0.2),
       SkipWarnings = False)
 
-elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-veto")
-elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-loose")
-elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-medium")
-elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-tight")
-phoIdLooseStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-loose")
-phoIdMediumStr     = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-medium")
-phoIdTightStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-tight")
+elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-veto")
+elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-loose")
+elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-medium")
+elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-tight")
+phoIdLooseStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-loose")
+phoIdMediumStr     = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-medium")
+phoIdTightStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-tight")
 
 process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronTag = cms.untracked.InputTag('slimmedElectrons'),
@@ -521,6 +521,7 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     lheEventTag  = cms.untracked.InputTag('externalLHEProducer'),
     lheRunTag  = cms.untracked.InputTag('externalLHEProducer'),
     generatorTag = cms.untracked.InputTag('generator'),
+    genheaderTag = cms.untracked.InputTag('generator'),
     genParticleTag = cms.untracked.InputTag('prunedGenParticles'),
 
     electronDetailLevel = cms.untracked.int32( 1 ),
