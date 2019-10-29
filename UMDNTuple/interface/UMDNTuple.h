@@ -59,6 +59,7 @@ private :
   JetProducer      _jetProducer;
   FatJetProducer   _fjetProducer;
   METProducer      _metProducer;
+  METProducer      _puppimetProducer;
   METFilterProducer  _metFilterProducer;
   TriggerProducer  _trigProducer;
   
