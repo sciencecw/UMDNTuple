@@ -1,8 +1,8 @@
 
 
 ```
-cmsrel CMSSW_10_2_16_UL
-cd CMSSW_10_2_16_UL/src
+cmsrel CMSSW_10_2_18
+cd CMSSW_10_2_18/src
 cmsenv
 ```
 
@@ -18,7 +18,7 @@ Get the ntuplizer
 ```
 git clone https://github.com/albertobelloni/UMDNTuple
 cd UMDNTuple
-git checkout 102X2018
+git checkout 102XFullRun2
 cd UMDNTuple
 scram b -j8
 ```
