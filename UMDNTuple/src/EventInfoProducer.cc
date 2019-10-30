@@ -30,6 +30,7 @@ void EventInfoProducer::initialize(
                         const edm::EDGetTokenT<std::vector<reco::Vertex> > & vtxTok, 
                         const edm::EDGetTokenT<std::vector<PileupSummaryInfo> > & puTok,
                         const edm::EDGetTokenT<GenEventInfoProduct> & genTok,
+                        const edm::EDGetTokenT<GenLumiInfoHeader> & genheaderTok,
                         const edm::EDGetTokenT<LHEEventProduct> & lheEventTok, 
                         const edm::EDGetTokenT<LHERunInfoProduct> & lheRunTok, 
                         const edm::EDGetTokenT<double> & rhoTok, 
@@ -41,6 +42,7 @@ void EventInfoProducer::initialize(
     _vertexToken = vtxTok;
     _puToken = puTok;
     _generatorToken = genTok;
+    _genLumiInfoToken = genheaderTok;
     _lheEventToken = lheEventTok;
     _lheRunToken = lheRunTok;
     _rhoToken = rhoTok;
@@ -159,8 +161,16 @@ void EventInfoProducer::produce(const edm::Event &iEvent ) {
             edm::Handle<LHEEventProduct>   lheevent_h;
             iEvent.getByToken(_lheEventToken, lheevent_h);
 
+            // LHE weights
             for(unsigned iw = 0; iw < lheevent_h->weights().size(); ++iw){
-                EventWeights->push_back(lheevent_h->weights()[iw].wgt);
+                EventWeights->push_back(generator_h->weights()[0] * lheevent_h->weights()[iw].wgt /
+                                        lheevent_h->originalXWGTUP());
+            }
+            
+            // Parton shower weights
+            for(unsigned iw = 0; iw < generator_h->weights().size(); ++iw){
+                EventWeights->push_back(generator_h->weights()[iw] * lheevent_h->weights()[0].wgt /
+                                        lheevent_h->originalXWGTUP());
             }
         }
 
@@ -174,6 +184,17 @@ void EventInfoProducer::produce(const edm::Event &iEvent ) {
     }
   
 
+}
+
+void EventInfoProducer::beginLuminosityBlock(const edm::LuminosityBlock& iLumi) {
+  if (_isMC && _weightNames.empty()) {
+  
+    edm::Handle<GenLumiInfoHeader> genLumiInfoHandle;
+    if (iLumi.getByToken(_genLumiInfoToken, genLumiInfoHandle)) {
+        _weightNames = genLumiInfoHandle->weightNames();
+    }
+    
+  }
 }
 
 void EventInfoProducer::endRun( const edm::Run & iRun ) {
@@ -190,6 +211,7 @@ void EventInfoProducer::endRun( const edm::Run & iRun ) {
     strcpy( descriptions.back(), "Null" );
 
     _infoTree->Branch("weightInfo",descriptions.back(), "weightInfo/C");
+    // LHE weight names
     for( std::vector<LHERunInfoProduct::Header>::const_iterator itr = lherun_h->headers_begin() ; itr != lherun_h->headers_end(); ++itr ) {
 
         std::string weight_group;
@@ -216,5 +238,10 @@ void EventInfoProducer::endRun( const edm::Run & iRun ) {
             }
         }
     }
-
+    
+    // Parton shower weight names
+    for (auto weightName : _weightNames) {
+        strcpy(descriptions.back(), weightName.c_str());
+        _infoTree->Fill();
+    }
 }

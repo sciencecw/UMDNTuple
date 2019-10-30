@@ -41,6 +41,7 @@ private:
 
   virtual void endJob();
 
+  virtual void beginLuminosityBlock(const edm::LuminosityBlock &, const edm::EventSetup &);
   virtual void endRun(edm::Run const& iRun, edm::EventSetup const&);
 
   
@@ -59,6 +60,7 @@ private :
   JetProducer      _jetProducer;
   FatJetProducer   _fjetProducer;
   METProducer      _metProducer;
+  METProducer      _puppimetProducer;
   METFilterProducer  _metFilterProducer;
   TriggerProducer  _trigProducer;
   

@@ -4,10 +4,12 @@
 #include <string>
 #include "TTree.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "FWCore/Framework/interface/LuminosityBlock.h"
 #include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+#include "SimDataFormats/GeneratorProducts/interface/GenLumiInfoHeader.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 
@@ -21,6 +23,7 @@ class EventInfoProducer {
                         const edm::EDGetTokenT<std::vector<reco::Vertex> > & , 
                         const edm::EDGetTokenT<std::vector<PileupSummaryInfo> > & ,
                         const edm::EDGetTokenT<GenEventInfoProduct> & ,
+                        const edm::EDGetTokenT<GenLumiInfoHeader> & ,
                         const edm::EDGetTokenT<LHEEventProduct> & , 
                         const edm::EDGetTokenT<LHERunInfoProduct> & , 
                         const edm::EDGetTokenT<double> & ,
@@ -33,6 +36,7 @@ class EventInfoProducer {
         void produce(const edm::Event &iEvent );
 
         void endRun( const edm::Run & );
+        void beginLuminosityBlock( const edm::LuminosityBlock & );
 
 
     private :
@@ -61,12 +65,15 @@ class EventInfoProducer {
         edm::EDGetTokenT<std::vector<PileupSummaryInfo> > _puToken;
         edm::EDGetTokenT<std::vector<reco::Vertex> > _vertexToken;
         edm::EDGetTokenT<GenEventInfoProduct> _generatorToken;
+        edm::EDGetTokenT<GenLumiInfoHeader> _genLumiInfoToken;
         edm::EDGetTokenT<LHEEventProduct> _lheEventToken;
         edm::EDGetTokenT<LHERunInfoProduct> _lheRunToken;
         edm::EDGetTokenT<double> _rhoToken;
         edm::EDGetTokenT< double > _prefweight_token;
         edm::EDGetTokenT< double > _prefweightup_token;
         edm::EDGetTokenT< double > _prefweightdown_token;
+        
+        std::vector<std::string> _weightNames;
 
         TTree * _infoTree;
         bool _isMC;

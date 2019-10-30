@@ -1,7 +1,7 @@
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "UMDNTuple/UMDNTuple/interface/UMDNTuple.h"
 #include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/one/EDAnalyzer.h"
+#include "FWCore/Framework/interface/EDAnalyzer.h"
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
@@ -101,36 +101,40 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     std::string prefix_gen         = "gen";
     std::string prefix_pref        = "pref";
     std::string prefix_met         = "met";
+    std::string prefix_puppimet    = "puppimet";
     std::string prefix_met_filter  = "metFilter";
 
-    if( iConfig.exists(prefix_el) ) {
+    if( iConfig.exists("prefix_el") ) {
         prefix_el = iConfig.getUntrackedParameter<std::string>("prefix_el");
     }
-    if( iConfig.exists(prefix_mu) ) {
+    if( iConfig.exists("prefix_mu") ) {
         prefix_mu = iConfig.getUntrackedParameter<std::string>("prefix_mu");
     }
-    if( iConfig.exists(prefix_ph) ) {
+    if( iConfig.exists("prefix_ph") ) {
         prefix_ph = iConfig.getUntrackedParameter<std::string>("prefix_ph");
     }
-    if( iConfig.exists(prefix_jet) ) {
+    if( iConfig.exists("prefix_jet") ) {
         prefix_jet = iConfig.getUntrackedParameter<std::string>("prefix_jet");
     }
-    if( iConfig.exists(prefix_fjet) ) {
+    if( iConfig.exists("prefix_fjet") ) {
         prefix_fjet = iConfig.getUntrackedParameter<std::string>("prefix_fjet");
     }
-    if( iConfig.exists(prefix_trig) ) {
+    if( iConfig.exists("prefix_trig") ) {
         prefix_trig = iConfig.getUntrackedParameter<std::string>("prefix_trig");
     }
-    if( iConfig.exists(prefix_gen) ) {
+    if( iConfig.exists("prefix_gen") ) {
         prefix_gen = iConfig.getUntrackedParameter<std::string>("prefix_gen");
     }
-    if( iConfig.exists(prefix_pref) ) {
+    if( iConfig.exists("prefix_pref") ) {
         prefix_pref = iConfig.getUntrackedParameter<std::string>("prefix_pref");
     }
-    if( iConfig.exists(prefix_met) ) {
+    if( iConfig.exists("prefix_met") ) {
         prefix_met = iConfig.getUntrackedParameter<std::string>("prefix_met");
     }
-    if( iConfig.exists(prefix_met_filter) ) {
+    if( iConfig.exists("prefix_puppimet") ) {
+        prefix_puppimet = iConfig.getUntrackedParameter<std::string>("prefix_puppimet");
+    }
+    if( iConfig.exists("prefix_met_filter") ) {
         prefix_met_filter = iConfig.getUntrackedParameter<std::string>("prefix_met_filter");
     }
 
@@ -140,6 +144,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     edm::EDGetTokenT<std::vector<reco::Vertex> > verticesToken;
     edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puToken;
     edm::EDGetTokenT<GenEventInfoProduct> generatorToken;
+    edm::EDGetTokenT<GenLumiInfoHeader> genLumiInfoToken;
     edm::EDGetTokenT<double> prefToken;
     edm::EDGetTokenT<double> rhoToken;
     edm::EDGetTokenT<double> prefweight_token;
@@ -167,6 +172,10 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     if( iConfig.exists("generatorTag") ) {
         generatorToken = consumes<GenEventInfoProduct>(
                  iConfig.getUntrackedParameter<edm::InputTag>("generatorTag"));
+    }
+    if( iConfig.exists("genheaderTag") ) {
+        genLumiInfoToken = consumes<GenLumiInfoHeader, edm::InLumi>(
+                 iConfig.getUntrackedParameter<edm::InputTag>("genheaderTag"));
     }
     if( iConfig.exists("rhoTag") ) {
         rhoToken = consumes<double>(
@@ -212,6 +221,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     edm::EDGetTokenT<edm::View<pat::Photon> >         photToken;
     edm::EDGetTokenT<edm::View<pat::Photon> >         photCalibToken;
     edm::EDGetTokenT<edm::View<pat::MET> >            metToken;
+    edm::EDGetTokenT<edm::View<pat::MET> >            puppimetToken;
     edm::EDGetTokenT<edm::TriggerResults>             metFilterToken;
     edm::EDGetTokenT<edm::TriggerResults>             trigToken;
     edm::EDGetTokenT<std::vector<reco::GenParticle> > genToken;
@@ -228,7 +238,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
 
     // Event information
     _eventProducer.initialize( verticesToken, puToken, 
-                               generatorToken, lheEventToken, lheRunToken,
+                               generatorToken, genLumiInfoToken, lheEventToken, lheRunToken,
                                rhoToken, prefweight_token, prefweightup_token, prefweightdown_token,
  			       _myTree, _weightInfoTree, _isMC , _doPref);
 
@@ -322,6 +332,11 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
                     iConfig.getUntrackedParameter<edm::InputTag>("metTag"));
 
         _metProducer .initialize( prefix_met      , metToken , _myTree );
+        
+        puppimetToken  = consumes<edm::View<pat::MET> >(
+                    iConfig.getUntrackedParameter<edm::InputTag>("puppimetTag"));
+
+        _puppimetProducer .initialize( prefix_puppimet , puppimetToken , _myTree );
     }
     if( _produceMETFilter ) {
         metFilterToken = consumes<edm::TriggerResults>(
@@ -378,7 +393,10 @@ void UMDNTuple::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     if( _producePhots )         _photProducer      .produce( iEvent );
     if( _produceJets  )         _jetProducer       .produce( iEvent );
     if( _produceFJets )         _fjetProducer      .produce( iEvent );
-    if( _produceMET   )         _metProducer       .produce( iEvent );
+    if( _produceMET   ) {
+                                _metProducer       .produce( iEvent );
+                                _puppimetProducer  .produce( iEvent );
+    }
     if( _produceMETFilter  )    _metFilterProducer .produce( iEvent );
     if( _produceTrig  )         _trigProducer      .produce( iEvent );
     if( _produceGen && _isMC  ) _genProducer       .produce( iEvent );
@@ -387,6 +405,12 @@ void UMDNTuple::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
 }
 
 void UMDNTuple::endJob() {
+
+}
+
+void UMDNTuple::beginLuminosityBlock( edm::LuminosityBlock const& iLumi, edm::EventSetup const&) {
+
+  _eventProducer.beginLuminosityBlock( iLumi );
 
 }
 
