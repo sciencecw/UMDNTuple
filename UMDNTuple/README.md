@@ -10,6 +10,9 @@ Check out the necessary tools and patches
 ```
 git cms-init
 git cms-merge-topic cms-egamma:EgammaPostRecoTools
+cd RecoEgamma
+scram b -j8
+cd -
 ```
 
 This might take some time
@@ -18,7 +21,7 @@ Get the ntuplizer
 ```
 git clone https://github.com/albertobelloni/UMDNTuple
 cd UMDNTuple
-git checkout 102XFullRun2
+git checkout 102XFullRunII
 cd UMDNTuple
 scram b -j8
 ```
