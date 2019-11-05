@@ -10,8 +10,11 @@ cd CMSSW_10_2_18/src
 cmsenv
 ```
 
-https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaPostRecoRecipes#2018_Data_MC
+
 Check out the necessary tools and patches
+
+https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaPostRecoRecipes#2018_Data_MC
+
 ```
 git cms-init
 git cms-merge-topic cms-egamma:EgammaPostRecoTools
