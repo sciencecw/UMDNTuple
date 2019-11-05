@@ -20,11 +20,14 @@ GenParticleProducer::GenParticleProducer(  ) :
 
 void GenParticleProducer::initialize( const std::string &prefix,
                           const edm::EDGetTokenT<std::vector<reco::GenParticle> >&genTok,
-                          TTree *tree, float minPt) {
+                          TTree *tree, float minPt, std::vector<int> genVIP) {
 
     _prefix = prefix;
     _genPartToken = genTok;
     _minPt = minPt;
+    for (int pid : genVIP) {
+        _genVIP.insert(pid);
+    }
 
 
     tree->Branch( (prefix + "_n" ).c_str(), &gen_n, (prefix + "_n/I" ).c_str() );
@@ -64,7 +67,8 @@ void GenParticleProducer::produce(const edm::Event &iEvent ) {
     for (unsigned int j=0; j < genParticles->size();++j){
         reco::GenParticle gen = genParticles->at(j);
 
-        if( gen.pt() < _minPt ) continue;
+        bool isVIP = _genVIP.find(abs(gen.pdgId())) != _genVIP.end();
+        if( gen.pt() < _minPt && !isVIP ) continue;
 
         gen_n++;
 

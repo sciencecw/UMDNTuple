@@ -546,6 +546,7 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     jetMinPt = cms.untracked.double( 30 ),
     fjetMinPt = cms.untracked.double( 200 ),
     genMinPt = cms.untracked.double( 5 ),
+    genVIP = cms.untracked.vint32( 23, 24, 25, 37, 9000007 ),
 
 
 )

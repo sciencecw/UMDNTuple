@@ -1,6 +1,7 @@
 #ifndef GENPARTICLEPRODUCER_H
 #define GENPARTICLEPRODUCER_H
 #include <vector>
+#include <set>
 #include <string>
 #include "TTree.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
@@ -15,7 +16,7 @@ class GenParticleProducer {
         //void initialize( const TTree *tree );
         void initialize( const std::string &prefix, 
                          const edm::EDGetTokenT<std::vector<reco::GenParticle> >&genTok, 
-                         TTree *tree, float minPt =1);
+                         TTree *tree, float minPt =1, std::vector<int> genVIP = {});
 
         void produce(const edm::Event &iEvent );
 
@@ -40,6 +41,7 @@ class GenParticleProducer {
         edm::EDGetTokenT<std::vector<reco::GenParticle> > _genPartToken;
 
         float _minPt;
+        std::set<int> _genVIP;
 
 };
 #endif
