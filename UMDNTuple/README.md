@@ -1,6 +1,10 @@
 
 
 ```
+## tcsh
+setenv SCRAM_ARCH slc7_amd64_gcc700
+## bash
+export SCRAM_ARCH=slc7_amd64_gcc700
 cmsrel CMSSW_10_2_18
 cd CMSSW_10_2_18/src
 cmsenv
