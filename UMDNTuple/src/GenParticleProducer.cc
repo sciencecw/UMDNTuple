@@ -20,6 +20,8 @@ GenParticleProducer::GenParticleProducer(  ) :
 
 void GenParticleProducer::initialize( const std::string &prefix,
                           const edm::EDGetTokenT<std::vector<reco::GenParticle> >&genTok,
+                          const edm::EDGetTokenT<std::vector<reco::GenJet> >&genDressedLeptonTok,
+                          const edm::EDGetTokenT<std::vector<reco::MET> >&genMetTok,
                           TTree *tree, float minPt, std::vector<int> genVIP) {
 
     _prefix = prefix;
@@ -42,6 +44,20 @@ void GenParticleProducer::initialize( const std::string &prefix,
     tree->Branch( (prefix + "_isPromptFinalState" ).c_str(), &gen_isPromptFinalState);
     tree->Branch( (prefix + "_fromHardProcessFinalState" ).c_str(), &gen_fromHardProcessFinalState);
     tree->Branch( (prefix + "_fromHardProcessBeforeFSR" ).c_str(), &gen_fromHardProcessBeforeFSR);
+    
+    _genDressedLeptonToken = genDressedLeptonTok;
+    
+    tree->Branch( (prefix + "_dl_n" ).c_str(), &gen_dl_n, (prefix + "_dl_n/I" ).c_str() );
+    tree->Branch( (prefix + "_dl_pt" ).c_str(), &gen_dl_pt );
+    tree->Branch( (prefix + "_dl_eta").c_str(), &gen_dl_eta );
+    tree->Branch( (prefix + "_dl_phi").c_str(), &gen_dl_phi );
+    tree->Branch( (prefix + "_dl_e"  ).c_str(), &gen_dl_e );
+    tree->Branch( (prefix + "_dl_PID" ).c_str(), &gen_dl_PID);
+    
+    _genMetToken = genMetTok;
+    
+    tree->Branch( (prefix + "_met_pt" ).c_str(), &gen_met_pt );
+    tree->Branch( (prefix + "_met_phi").c_str(), &gen_met_phi );
 }
 
 
@@ -92,6 +108,35 @@ void GenParticleProducer::produce(const edm::Event &iEvent ) {
 
 
     }
+    
+    gen_dl_n = 0;
+    gen_dl_pt->clear();
+    gen_dl_eta->clear();
+    gen_dl_phi->clear();
+    gen_dl_e->clear();
+    gen_dl_PID->clear();
+
+    edm::Handle<std::vector<reco::GenJet> > genDressedLeptons;
+    iEvent.getByToken(_genDressedLeptonToken,genDressedLeptons);
+
+    for (unsigned int j=0; j < genDressedLeptons->size();++j){
+        reco::GenJet dl = genDressedLeptons->at(j);
+
+        gen_dl_n++;
+
+        // kinematics
+        gen_dl_pt  -> push_back( dl.pt() );
+        gen_dl_eta -> push_back( dl.eta() );
+        gen_dl_phi -> push_back( dl.phi() );
+        gen_dl_e   -> push_back( dl.energy() );
+        gen_dl_PID -> push_back( dl.pdgId() );
+    }
+    
+    edm::Handle<std::vector<reco::MET> > genMets;
+    iEvent.getByToken(_genMetToken,genMets);
+
+    gen_met_pt  = genMets->at(0).pt();
+    gen_met_phi = genMets->at(0).phi();
 
 }
 

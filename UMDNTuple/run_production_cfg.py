@@ -523,6 +523,8 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     generatorTag = cms.untracked.InputTag('generator'),
     genheaderTag = cms.untracked.InputTag('generator'),
     genParticleTag = cms.untracked.InputTag('prunedGenParticles'),
+    genDressedLeptonTag = cms.untracked.InputTag('particleLevel:leptons'),
+    genMetTag = cms.untracked.InputTag('particleLevel:mets'),
 
     electronDetailLevel = cms.untracked.int32( 1 ),
     photonDetailLevel = cms.untracked.int32( 1 ),
@@ -560,6 +562,14 @@ process.p += process.egammaPostRecoSeq
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
 #if opt.isMC: process.p += process.prefiringweight
+
+if opt.isMC == 1:
+    process.load("GeneratorInterface.RivetInterface.mergedGenParticles_cfi")
+    process.load("GeneratorInterface.RivetInterface.genParticles2HepMC_cfi")
+    process.genParticles2HepMC.genParticles = cms.InputTag("mergedGenParticles")
+    process.load("GeneratorInterface.RivetInterface.particleLevel_cfi")
+    process.particleLevel.HepMCCollection = cms.InputTag("genParticles2HepMC:unsmeared")
+    process.p += process.mergedGenParticles*process.genParticles2HepMC*process.particleLevel
 
 process.p += process.UMDNTuple
 
