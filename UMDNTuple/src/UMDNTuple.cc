@@ -69,6 +69,7 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     float jetMinPt  = 0;
     float fjetMinPt = 0;
     float genMinPt  = 0;
+    std::vector<int> genVIP = {};
 
     if( iConfig.exists("electronMinPt") ) {
         elecMinPt = iConfig.getUntrackedParameter<double>("electronMinPt");
@@ -88,6 +89,9 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     }
     if( iConfig.exists("genMinPt") ) {
         genMinPt  = iConfig.getUntrackedParameter<double>("genMinPt");
+    }
+    if( iConfig.exists("genVIP") ) {
+        genVIP  = iConfig.getUntrackedParameter<std::vector<int>>("genVIP");
     }
 
     // prefix for object branches
@@ -225,6 +229,8 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     edm::EDGetTokenT<edm::TriggerResults>             metFilterToken;
     edm::EDGetTokenT<edm::TriggerResults>             trigToken;
     edm::EDGetTokenT<std::vector<reco::GenParticle> > genToken;
+    edm::EDGetTokenT<std::vector<reco::GenJet> >      genDressedLeptonToken;
+    edm::EDGetTokenT<std::vector<reco::MET> >         genMetToken;
 
     std::cout << " _produceJets " << _produceJets << std::endl; 
     std::cout << " _produceFJets " << _produceFJets << std::endl;
@@ -375,8 +381,12 @@ UMDNTuple::UMDNTuple( const edm::ParameterSet & iConfig ) :
     if( _produceGen ) {
         genToken = consumes<std::vector<reco::GenParticle> >(
                    iConfig.getUntrackedParameter<edm::InputTag>("genParticleTag"));
+        genDressedLeptonToken = consumes<std::vector<reco::GenJet> >(
+                    iConfig.getUntrackedParameter<edm::InputTag>("genDressedLeptonTag"));
+        genMetToken = consumes<std::vector<reco::MET> >(
+                    iConfig.getUntrackedParameter<edm::InputTag>("genMetTag"));
 
-        _genProducer.initialize( prefix_gen       , genToken, _myTree, genMinPt );
+        _genProducer.initialize( prefix_gen, genToken, genDressedLeptonToken, genMetToken, _myTree, genMinPt, genVIP );
     }
 
 }

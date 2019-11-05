@@ -150,7 +150,7 @@ if opt.year == '2016':
                        	era=egamma_era)  #era is new to select between 2016 / 2017,  it defaults to 2017
 if opt.year == '2017':
 	setupEgammaPostRecoSeq(process,
-                       	runVID=False, ##saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
+                       	runVID=True, ##saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
                        	era=egamma_era)
 if opt.year in ['2018', '2018D']:
   setupEgammaPostRecoSeq(process,
@@ -467,13 +467,13 @@ if opt.year in ['2016', '2017']:
       PrefiringRateSystematicUncty = cms.double(0.2),
       SkipWarnings = False)
 
-elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-veto")
-elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-loose")
-elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-medium")
-elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V1-tight")
-phoIdLooseStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-loose")
-phoIdMediumStr     = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-medium")
-phoIdTightStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V1-tight")
+elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-veto")
+elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-loose")
+elecIdMediumStr    = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-medium")
+elecIdTightStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-tight")
+phoIdLooseStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-loose")
+phoIdMediumStr     = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-medium")
+phoIdTightStr      = cms.untracked.string("cutBasedPhotonID-Fall17-94X-V2-tight")
 
 process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronTag = cms.untracked.InputTag('slimmedElectrons'),
@@ -523,6 +523,8 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     generatorTag = cms.untracked.InputTag('generator'),
     genheaderTag = cms.untracked.InputTag('generator'),
     genParticleTag = cms.untracked.InputTag('prunedGenParticles'),
+    genDressedLeptonTag = cms.untracked.InputTag('particleLevel:leptons'),
+    genMetTag = cms.untracked.InputTag('particleLevel:mets'),
 
     electronDetailLevel = cms.untracked.int32( 1 ),
     photonDetailLevel = cms.untracked.int32( 1 ),
@@ -543,9 +545,10 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     electronMinPt = cms.untracked.double( 10 ),
     muonMinPt = cms.untracked.double( 10 ),
     photonMinPt = cms.untracked.double( 20 ),
-    jetMinPt = cms.untracked.double( 30 ),
+    jetMinPt = cms.untracked.double( 10 ),
     fjetMinPt = cms.untracked.double( 200 ),
     genMinPt = cms.untracked.double( 5 ),
+    genVIP = cms.untracked.vint32( 23, 24, 25, 37, 9000007 ),
 
 
 )
@@ -559,6 +562,14 @@ process.p += process.egammaPostRecoSeq
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
 #if opt.isMC: process.p += process.prefiringweight
+
+if opt.isMC == 1:
+    process.load("GeneratorInterface.RivetInterface.mergedGenParticles_cfi")
+    process.load("GeneratorInterface.RivetInterface.genParticles2HepMC_cfi")
+    process.genParticles2HepMC.genParticles = cms.InputTag("mergedGenParticles")
+    process.load("GeneratorInterface.RivetInterface.particleLevel_cfi")
+    process.particleLevel.HepMCCollection = cms.InputTag("genParticles2HepMC:unsmeared")
+    process.p += process.mergedGenParticles*process.genParticles2HepMC*process.particleLevel
 
 process.p += process.UMDNTuple
 
