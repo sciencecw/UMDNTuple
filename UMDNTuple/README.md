@@ -10,10 +10,10 @@ cd CMSSW_10_2_18/src
 cmsenv
 ```
 
+https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaPostRecoRecipes#2018_Data_MC
 Check out the necessary tools and patches
 ```
 git cms-init
-# https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaPostRecoRecipes#2018_Data_MC
 git cms-merge-topic cms-egamma:EgammaPostRecoTools
 git cms-merge-topic cms-egamma:PhotonIDValueMapSpeedup1029 #optional but speeds up the photon ID value module so things fun faster
 git cms-addpkg EgammaAnalysis/ElectronTools
@@ -21,8 +21,6 @@ rm EgammaAnalysis/ElectronTools/data -rf
 git clone git@github.com:cms-data/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools/data
 scram b -j8
 ```
-
-This might take some time
 
 Get the ntuplizer
 ```
