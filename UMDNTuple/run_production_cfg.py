@@ -448,16 +448,6 @@ filter_map = cms.untracked.vstring(
     '101:Flag_BadPFMuonFilter',
 )
 
-#process.prefiringweight = cms.EDProducer("L1ECALPrefiringWeightProducer",
-#                                 ThePhotons = cms.InputTag("slimmedPhotons"),
-#	                         TheJets = cms.InputTag("slimmedJets"),
-#                                 L1Maps = cms.string("src/L1Prefiring/EventWeightProducer/data/L1PrefiringMaps_new.root"), # update this line with the location of this file
-#                                 #L1Maps = cms.string("L1PrefiringMaps_new.root"), # update this line with the location of this file
-#                                 DataEra = cms.string("2017BtoF"), #Use 2016BtoH for 2016
-#                                 #DataEra = cms.string("2016BtoH"),
-#                                 UseJetEMPt = cms.bool(False), #can be set to true to use jet prefiring maps parametrized vs pt(em) instead of pt
-#	                         PrefiringRateSystematicUncty = cms.double(0.2) #Minimum relative prefiring uncty per object
-#                                 )
 
 if opt.year in ['2016', '2017']:
   from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
@@ -512,8 +502,8 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     #conversionsTag = cms.untracked.InputTag('allConversions' ),
     verticesTag  = cms.untracked.InputTag('offlineSlimmedPrimaryVertices'),
     rhoTag  = cms.untracked.InputTag('fixedGridRhoFastjetAll'),
-	
-	doPref = cms.untracked.bool(False),  #no prefiring weights for 2018
+
+    doPref = cms.untracked.bool(True) if opt.year in ['2016','2017'] else cms.untracked.bool(False),  #no prefiring weights for 2018
     prefTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProb'),
     prefupTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProbUp'),
     prefdownTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProbDown'),
@@ -541,10 +531,10 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     prefix_gen  = cms.untracked.string("gen"),
     prefix_met  = cms.untracked.string("met"),
     prefix_puppimet = cms.untracked.string("puppimet"),
-                                   
+
     electronMinPt = cms.untracked.double( 10 ),
     muonMinPt = cms.untracked.double( 10 ),
-    photonMinPt = cms.untracked.double( 20 ),
+    photonMinPt = cms.untracked.double( 10 ),
     jetMinPt = cms.untracked.double( 10 ),
     fjetMinPt = cms.untracked.double( 200 ),
     genMinPt = cms.untracked.double( 5 ),
@@ -561,7 +551,9 @@ process.p += process.egammaPostRecoSeq
 # run additional MET filters
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
-#if opt.isMC: process.p += process.prefiringweight
+
+# prefiring weight
+if opt.isMC and opt.year in ['2016','2017']: process.p += process.prefiringweight
 
 if opt.isMC == 1:
     process.load("GeneratorInterface.RivetInterface.mergedGenParticles_cfi")
