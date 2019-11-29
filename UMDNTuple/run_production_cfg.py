@@ -504,9 +504,9 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     rhoTag  = cms.untracked.InputTag('fixedGridRhoFastjetAll'),
 
     doPref = cms.untracked.bool(True) if opt.year in ['2016','2017'] else cms.untracked.bool(False),  #no prefiring weights for 2018
-    prefTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProb'),
-    prefupTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProbUp'),
-    prefdownTag = cms.untracked.InputTag('prefiringweight:NonPrefiringProbDown'),
+    prefTag = cms.untracked.InputTag('prefiringweight:nonPrefiringProb'),
+    prefupTag = cms.untracked.InputTag('prefiringweight:nonPrefiringProbUp'),
+    prefdownTag = cms.untracked.InputTag('prefiringweight:nonPrefiringProbDown'),
     puTag   = cms.untracked.InputTag('slimmedAddPileupInfo'),
     lheEventTag  = cms.untracked.InputTag('externalLHEProducer'),
     lheRunTag  = cms.untracked.InputTag('externalLHEProducer'),
