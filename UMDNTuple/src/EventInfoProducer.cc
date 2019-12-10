@@ -160,17 +160,25 @@ void EventInfoProducer::produce(const edm::Event &iEvent ) {
         if( !_disableEventWeights ) {
             edm::Handle<LHEEventProduct>   lheevent_h;
             iEvent.getByToken(_lheEventToken, lheevent_h);
-
-            // LHE weights
-            for(unsigned iw = 0; iw < lheevent_h->weights().size(); ++iw){
-                EventWeights->push_back(generator_h->weights()[0] * lheevent_h->weights()[iw].wgt /
-                                        lheevent_h->originalXWGTUP());
-            }
             
-            // Parton shower weights
-            for(unsigned iw = 0; iw < generator_h->weights().size(); ++iw){
-                EventWeights->push_back(generator_h->weights()[iw] * lheevent_h->weights()[0].wgt /
-                                        lheevent_h->originalXWGTUP());
+            // LHE weights
+            if (lheevent_h.isValid()) {
+                for(unsigned iw = 0; iw < lheevent_h->weights().size(); ++iw){
+                    EventWeights->push_back(generator_h->weights()[0] * lheevent_h->weights()[iw].wgt /
+                                            lheevent_h->originalXWGTUP());
+                }
+                
+                // Parton shower weights corrected for central LHE weight
+                for(unsigned iw = 0; iw < generator_h->weights().size(); ++iw){
+                    EventWeights->push_back(generator_h->weights()[iw] * lheevent_h->weights()[0].wgt /
+                                            lheevent_h->originalXWGTUP());
+                }
+            }
+            else {
+                // Bare parton shower weights
+                for(unsigned iw = 0; iw < generator_h->weights().size(); ++iw){
+                    EventWeights->push_back(generator_h->weights()[iw]);
+                }
             }
         }
 
@@ -212,28 +220,30 @@ void EventInfoProducer::endRun( const edm::Run & iRun ) {
 
     _infoTree->Branch("weightInfo",descriptions.back(), "weightInfo/C");
     // LHE weight names
-    for( std::vector<LHERunInfoProduct::Header>::const_iterator itr = lherun_h->headers_begin() ; itr != lherun_h->headers_end(); ++itr ) {
+    if (lherun_h.isValid()) {
+        for( std::vector<LHERunInfoProduct::Header>::const_iterator itr = lherun_h->headers_begin() ; itr != lherun_h->headers_end(); ++itr ) {
 
-        std::string weight_group;
-        if(  itr->tag() == "initrwgt" ) {
-	    for(std::vector<std::string>::const_iterator it = itr->begin();
-	        it != itr->end(); ++it){
+            std::string weight_group;
+            if(  itr->tag() == "initrwgt" ) {
+            for(std::vector<std::string>::const_iterator it = itr->begin();
+                it != itr->end(); ++it){
 
-                if( it->find( "weightgroup" ) != std::string::npos ) {
-                    std::string::size_type type_pos = it->find( "type=" );
-                    if( type_pos != std::string::npos ) {
-                        std::string::size_type end_pos = it->find( ">" );
-                        weight_group = it->substr( type_pos+6, end_pos - type_pos - 7 );
+                    if( it->find( "weightgroup" ) != std::string::npos ) {
+                        std::string::size_type type_pos = it->find( "type=" );
+                        if( type_pos != std::string::npos ) {
+                            std::string::size_type end_pos = it->find( ">" );
+                            weight_group = it->substr( type_pos+6, end_pos - type_pos - 7 );
+                        }
                     }
-                }
-                std::string::size_type weightid_pos = it->find( "weight id");
-                if( weightid_pos != std::string::npos ) {
-                    std::string::size_type idend = it->find_first_of( '>' );
-                    std::string idnum = it->substr( weightid_pos+11, idend-weightid_pos-12 );
-                    std::string::size_type nameend = it->find( "</weight>" );
-                    std::string weightname = it->substr( idend +1, nameend-idend-1 );
-                    strcpy(descriptions.back(),(weight_group + ":" + weightname).c_str( ));
-                    _infoTree->Fill();
+                    std::string::size_type weightid_pos = it->find( "weight id");
+                    if( weightid_pos != std::string::npos ) {
+                        std::string::size_type idend = it->find_first_of( '>' );
+                        std::string idnum = it->substr( weightid_pos+11, idend-weightid_pos-12 );
+                        std::string::size_type nameend = it->find( "</weight>" );
+                        std::string weightname = it->substr( idend +1, nameend-idend-1 );
+                        strcpy(descriptions.back(),(weight_group + ":" + weightname).c_str( ));
+                        _infoTree->Fill();
+                    }
                 }
             }
         }
