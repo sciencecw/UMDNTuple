@@ -38,6 +38,7 @@ opt.inputFiles = [
     #'/store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14_ext3-v1/30000/00026C15-20DF-E911-ACFB-FA163E388F2A.root'
     '/store/mc/RunIISummer16MiniAODv3/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3_ext2-v1/100000/005FEC6C-D6C2-E811-A83B-A0369FC5E094.root'
     #'/store/data/Run2016H/SingleElectron/MINIAOD/17Jul2018-v1/20000/E4F33560-978D-E811-AAF8-0CC47A01035C.root'
+    #'/store/mc/RunIISummer16MiniAODv3/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/60000/1C6659CD-F5E4-E811-BFA6-E0071B73C600.root'
 ]
 
 
