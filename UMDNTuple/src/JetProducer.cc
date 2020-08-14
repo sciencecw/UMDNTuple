@@ -8,6 +8,7 @@ JetProducer::JetProducer(  ) :
     jet_eta(0),
     jet_phi(0),
     jet_e(0),
+    jet_flav(0),
     jet_nhf(0),
     jet_chf(0),
     jet_muf(0),
@@ -20,6 +21,8 @@ JetProducer::JetProducer(  ) :
     jet_bTagCSVV1(0),
     jet_bTagCSVSLV1(0),
     jet_bTagCisvV2(0),
+    jet_bTagDeepb(0),
+    jet_bTagDeepl(0),
     jet_bTagJp(0),
     jet_bTagBjp(0),
     jet_bTagTche(0),
@@ -49,6 +52,7 @@ void JetProducer::initialize( const std::string &prefix,
     tree->Branch( (prefix + "_eta").c_str(), &jet_eta );
     tree->Branch( (prefix + "_phi").c_str(), &jet_phi );
     tree->Branch( (prefix + "_e"  ).c_str(), &jet_e );
+    tree->Branch( (prefix + "_flav"  ).c_str(), &jet_flav );
 
     if( _detail > 0 ) {
 
@@ -61,6 +65,8 @@ void JetProducer::initialize( const std::string &prefix,
         tree->Branch( (prefix + "_nmult" ).c_str()       , &jet_nmult);
         tree->Branch( (prefix + "_ndaughters" ).c_str()  , &jet_ndaughters);
         tree->Branch( (prefix + "_bTagCisvV2" ).c_str()  , &jet_bTagCisvV2);
+        tree->Branch( (prefix + "_bTagDeepb" ).c_str()  , &jet_bTagDeepb);
+        tree->Branch( (prefix + "_bTagDeepl" ).c_str()  , &jet_bTagDeepl);
 
         if( _detail > 1 ) {
 
@@ -89,6 +95,7 @@ void JetProducer::produce(const edm::Event &iEvent ) {
     jet_eta->clear();
     jet_phi->clear();
     jet_e->clear();
+    jet_flav->clear();
     if( _detail > 0 ) {
         jet_nhf->clear();
         jet_chf->clear();
@@ -99,6 +106,8 @@ void JetProducer::produce(const edm::Event &iEvent ) {
         jet_nmult->clear();
         jet_ndaughters->clear();
         jet_bTagCisvV2->clear();
+        jet_bTagDeepb ->clear();
+        jet_bTagDeepl ->clear();
         if( _detail > 1) {
             jet_bTagCSV->clear();
             jet_bTagCSVV1->clear();
@@ -128,6 +137,7 @@ void JetProducer::produce(const edm::Event &iEvent ) {
         jet_eta -> push_back( jet->eta() );
         jet_phi -> push_back( jet->phi() );
         jet_e -> push_back( jet->energy() );
+        jet_flav -> push_back( jet->hadronFlavour() );
 
         if( _detail > 0 ) {
 
@@ -145,6 +155,13 @@ void JetProducer::produce(const edm::Event &iEvent ) {
 	     	jet_chf-> push_back(-1.0);
 	    }
             jet_bTagCisvV2  ->push_back(jet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
+            jet_bTagDeepb    ->push_back(jet->bDiscriminator("pfDeepFlavourJetTags:probb")+
+                                         jet->bDiscriminator("pfDeepFlavourJetTags:probbb")+
+                                         jet->bDiscriminator("pfDeepFlavourJetTags:problepb")
+                                         );
+            jet_bTagDeepl    ->push_back(jet->bDiscriminator("pfDeepFlavourJetTags:probuds")+
+                                         jet->bDiscriminator("pfDeepFlavourJetTags:probg")
+                                         );
 
             if( _detail > 1 ) {
 
@@ -160,9 +177,6 @@ void JetProducer::produce(const edm::Event &iEvent ) {
                 jet_bTagSsvhe   ->push_back(jet->bDiscriminator("pfSimpleSecondaryVertexHighEffBJetTags"));
                 jet_bTagSsvhp   ->push_back(jet->bDiscriminator("pfSimpleSecondaryVertexHighPurBJetTags"));
 
-                // this would be for gen jets
-                //JetAk04PartFlav_->push_back(jet.partonFlavour());
-                //JetAk04HadFlav_->push_back(jet.hadronFlavour());
 
             	if( jet->hasPFSpecific()) {
                   jet_HFHadE->push_back(jet->HFHadronEnergy());

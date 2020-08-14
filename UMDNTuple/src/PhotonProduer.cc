@@ -14,6 +14,14 @@ PhotonProducer::PhotonProducer(  ) :
     ph_etaOrig(0),
     ph_phiOrig(0),
     ph_eOrig(0),
+    ph_pt_ScaleUp(0),
+    ph_e_ScaleUp(0),
+    ph_pt_ScaleDown(0),
+    ph_e_ScaleDown(0),
+    ph_pt_SigmaUp(0),
+    ph_e_SigmaUp(0),
+    ph_pt_SigmaDown(0),
+    ph_e_SigmaDown(0),
     ph_passVIDLoose(0),
     ph_passVIDMedium(0),
     ph_passVIDTight(0),
@@ -86,6 +94,15 @@ void PhotonProducer::initialize( const std::string &prefix,
     tree->Branch( (prefix + "_eOrig"  ).c_str(), &ph_eOrig );
 
     if( detail > 0 ) {
+
+        tree->Branch( (prefix + "_pt_ScaleUp" ).c_str(), &ph_pt_ScaleUp );
+        tree->Branch( (prefix + "_e_ScaleUp"  ).c_str(), &ph_e_ScaleUp );
+        tree->Branch( (prefix + "_pt_ScaleDown" ).c_str(), &ph_pt_ScaleDown );
+        tree->Branch( (prefix + "_e_ScaleDown"  ).c_str(), &ph_e_ScaleDown );
+        tree->Branch( (prefix + "_pt_SigmaUp" ).c_str(), &ph_pt_SigmaUp );
+        tree->Branch( (prefix + "_e_SigmaUp"  ).c_str(), &ph_e_SigmaUp );
+        tree->Branch( (prefix + "_pt_SigmaDown" ).c_str(), &ph_pt_SigmaDown );
+        tree->Branch( (prefix + "_e_SigmaDown"  ).c_str(), &ph_e_SigmaDown );
 
         tree->Branch( (prefix + "_passVIDLoose").c_str(), &ph_passVIDLoose );
         tree->Branch( (prefix + "_passVIDMedium").c_str(), &ph_passVIDMedium );
@@ -199,6 +216,14 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
     ph_eOrig->clear();
 
     if( _detail > 0 ) {
+        ph_pt_ScaleUp->clear();
+        ph_e_ScaleUp->clear();
+        ph_pt_ScaleDown->clear();
+        ph_e_ScaleDown->clear();
+        ph_pt_SigmaUp->clear();
+        ph_e_SigmaUp->clear();
+        ph_pt_SigmaDown->clear();
+        ph_e_SigmaDown->clear();
 
         ph_passVIDLoose->clear();
         ph_passVIDMedium->clear();
@@ -266,6 +291,10 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
     const std::string ph_phoIso_str = _PhoIso;
 
     const std::string phoEneCalib_str = _eneCalib;
+    const std::string phoEneSclUP_str     = "energyScaleUp";
+    const std::string phoEneSclDN_str     = "energyScaleDown";
+    const std::string phoEneSigUP_str     = "energySigmaUp";
+    const std::string phoEneSigDN_str     = "energySigmaDown";
 
     //edm::Handle<edm::View<pat::Electron> > electrons_h;
     //iEvent.getByToken(_ElectronsToken, electrons_h);
@@ -302,6 +331,18 @@ void PhotonProducer::produce(const edm::Event &iEvent ) {
         ph_e -> push_back( calibp4.E() );
 
         if( _detail > 0 ) {
+            auto scaledp4 = ph->p4() * ph->userFloat( phoEneSclUP_str )/ph->energy() ;
+            ph_pt_ScaleUp -> push_back( scaledp4.Pt() );
+            ph_e_ScaleUp  -> push_back( scaledp4.E() );
+            scaledp4 = ph->p4() * ph->userFloat( phoEneSclDN_str )/ph->energy() ;
+            ph_pt_ScaleDown  -> push_back( scaledp4.Pt() );
+            ph_e_ScaleDown   -> push_back( scaledp4.E() );
+            scaledp4 = ph->p4() * ph->userFloat( phoEneSigUP_str )/ph->energy() ;
+            ph_pt_SigmaUp -> push_back( scaledp4.Pt() );
+            ph_e_SigmaUp  -> push_back( scaledp4.E() );
+            scaledp4 = ph->p4() * ph->userFloat( phoEneSigDN_str )/ph->energy() ;
+            ph_pt_SigmaDown  -> push_back( scaledp4.Pt() );
+            ph_e_SigmaDown   -> push_back( scaledp4.E() );
 
             ph_passVIDLoose -> push_back(  ph->photonID( ph_VIDLoose_str  ) );
             ph_passVIDMedium -> push_back( ph->photonID( ph_VIDMedium_str ) );

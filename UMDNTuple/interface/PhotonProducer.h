@@ -60,6 +60,16 @@ class PhotonProducer {
         std::vector<float> *ph_etaOrig;
         std::vector<float> *ph_phiOrig;
         std::vector<float> *ph_eOrig;
+
+        std::vector<float> *ph_pt_ScaleUp;
+        std::vector<float> *ph_e_ScaleUp;
+        std::vector<float> *ph_pt_ScaleDown;
+        std::vector<float> *ph_e_ScaleDown;
+        std::vector<float> *ph_pt_SigmaUp;
+        std::vector<float> *ph_e_SigmaUp;
+        std::vector<float> *ph_pt_SigmaDown;
+        std::vector<float> *ph_e_SigmaDown;
+
         std::vector<Bool_t> *ph_passVIDLoose;
         std::vector<Bool_t> *ph_passVIDMedium;
         std::vector<Bool_t> *ph_passVIDTight;
