@@ -30,6 +30,7 @@ class JetProducer {
         std::vector<float> *jet_eta;
         std::vector<float> *jet_phi;
         std::vector<float> *jet_e;
+        std::vector<int> *jet_flav;
         std::vector<float> *jet_nhf;
         std::vector<float> *jet_chf;
         std::vector<float> *jet_muf;
@@ -42,6 +43,8 @@ class JetProducer {
         std::vector<float> *jet_bTagCSVV1;
         std::vector<float> *jet_bTagCSVSLV1;
         std::vector<float> *jet_bTagCisvV2;
+        std::vector<float> *jet_bTagDeepb;
+        std::vector<float> *jet_bTagDeepl;
         std::vector<float> *jet_bTagJp;
         std::vector<float> *jet_bTagBjp;
         std::vector<float> *jet_bTagTche;

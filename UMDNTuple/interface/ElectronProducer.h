@@ -58,6 +58,15 @@ class ElectronProducer {
         std::vector<float> *el_phiOrig;
         std::vector<float> *el_eOrig;
 
+        std::vector<float> *el_pt_ScaleUp;
+        std::vector<float> *el_e_ScaleUp;
+        std::vector<float> *el_pt_ScaleDown;
+        std::vector<float> *el_e_ScaleDown;
+        std::vector<float> *el_pt_SigmaUp;
+        std::vector<float> *el_e_SigmaUp;
+        std::vector<float> *el_pt_SigmaDown;
+        std::vector<float> *el_e_SigmaDown;
+
         std::vector<Bool_t> *el_passVIDVeryLoose;
         std::vector<Bool_t> *el_passVIDLoose;
         std::vector<Bool_t> *el_passVIDMedium;

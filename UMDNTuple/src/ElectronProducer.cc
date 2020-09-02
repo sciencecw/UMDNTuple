@@ -13,6 +13,14 @@ ElectronProducer::ElectronProducer(  ) :
     el_etaOrig(0),
     el_phiOrig(0),
     el_eOrig(0),
+    el_pt_ScaleUp(0),
+    el_e_ScaleUp(0),
+    el_pt_ScaleDown(0),
+    el_e_ScaleDown(0),
+    el_pt_SigmaUp(0),
+    el_e_SigmaUp(0),
+    el_pt_SigmaDown(0),
+    el_e_SigmaDown(0),
     el_passVIDVeryLoose(0),
     el_passVIDLoose(0),
     el_passVIDMedium(0),
@@ -76,6 +84,14 @@ void ElectronProducer::initialize( const std::string &prefix,
     tree->Branch( (prefix + "_eOrig"  ).c_str(), &el_eOrig );
 
     if( detail > 0 ) {
+        tree->Branch( (prefix + "_pt_ScaleUp" ).c_str(), &el_pt_ScaleUp );
+        tree->Branch( (prefix + "_e_ScaleUp"  ).c_str(), &el_e_ScaleUp );
+        tree->Branch( (prefix + "_pt_ScaleDown" ).c_str(), &el_pt_ScaleDown );
+        tree->Branch( (prefix + "_e_ScaleDown"  ).c_str(), &el_e_ScaleDown );
+        tree->Branch( (prefix + "_pt_SigmaUp" ).c_str(), &el_pt_SigmaUp );
+        tree->Branch( (prefix + "_e_SigmaUp"  ).c_str(), &el_e_SigmaUp );
+        tree->Branch( (prefix + "_pt_SigmaDown" ).c_str(), &el_pt_SigmaDown );
+        tree->Branch( (prefix + "_e_SigmaDown"  ).c_str(), &el_e_SigmaDown );
 
         tree->Branch( (prefix + "_passVIDVeryLoose").c_str(), &el_passVIDVeryLoose );
         tree->Branch( (prefix + "_passVIDLoose").c_str(), &el_passVIDLoose );
@@ -181,6 +197,14 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
     el_eOrig->clear();
 
     if( _detail > 0 ) {
+        el_pt_ScaleUp->clear();
+        el_e_ScaleUp->clear();
+        el_pt_ScaleDown->clear();
+        el_e_ScaleDown->clear();
+        el_pt_SigmaUp->clear();
+        el_e_SigmaUp->clear();
+        el_pt_SigmaDown->clear();
+        el_e_SigmaDown->clear();
         el_passVIDVeryLoose->clear(); 
         el_passVIDLoose->clear();
         el_passVIDMedium->clear();
@@ -237,6 +261,10 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
     const std::string elecIdHEEP_str      = _IdHEEP;
 
     const std::string eleEneCalib_str     = _eneCalib;
+    const std::string eleEneSclUP_str     = "energyScaleUp";
+    const std::string eleEneSclDN_str     = "energyScaleDown";
+    const std::string eleEneSigUP_str     = "energySigmaUp";
+    const std::string eleEneSigDN_str     = "energySigmaDown";
 
     edm::Handle<reco::BeamSpot> beamSpot_h;
     edm::Handle<reco::ConversionCollection> conversions_h;
@@ -271,6 +299,19 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
 
         if(_detail > 0 ) {
 
+            auto scaledp4 = el->p4() * el->userFloat( eleEneSclUP_str )/el->energy() ;
+            el_pt_ScaleUp -> push_back( scaledp4.Pt() );
+            el_e_ScaleUp  -> push_back( scaledp4.E() );
+            scaledp4 = el->p4() * el->userFloat( eleEneSclDN_str )/el->energy() ;
+            el_pt_ScaleDown  -> push_back( scaledp4.Pt() );
+            el_e_ScaleDown   -> push_back( scaledp4.E() );
+            scaledp4 = el->p4() * el->userFloat( eleEneSigUP_str )/el->energy() ;
+            el_pt_SigmaUp -> push_back( scaledp4.Pt() );
+            el_e_SigmaUp  -> push_back( scaledp4.E() );
+            scaledp4 = el->p4() * el->userFloat( eleEneSigDN_str )/el->energy() ;
+            el_pt_SigmaDown  -> push_back( scaledp4.Pt() );
+            el_e_SigmaDown   -> push_back( scaledp4.E() );
+
             // VID
             el_passVIDVeryLoose->push_back( el->electronID( elecIdVeryLoose_str ) );
             el_passVIDLoose->push_back(     el->electronID( elecIdLoose_str     ) );
@@ -286,7 +327,9 @@ void ElectronProducer::produce(const edm::Event &iEvent ) {
             // Update the dEtaIn calculate according to 
             // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2#Recipe80X 
             // https://github.com/ikrav/cmssw/blob/egm_id_80X_v1/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDEtaInSeedCut.cc#L30-L33
-            el_dEtaIn ->push_back( el->superCluster().isNonnull() && el->superCluster()->seed().isNonnull() ? el->deltaEtaSuperClusterTrackAtVtx() - el->superCluster()->eta() + el->superCluster()->seed()->eta() : std::numeric_limits<float>::max() );
+            el_dEtaIn ->push_back( el->superCluster().isNonnull() && el->superCluster()->seed().isNonnull() ?
+                                   el->deltaEtaSuperClusterTrackAtVtx() - el->superCluster()->eta() + el->superCluster()->seed()->eta() :
+                                   std::numeric_limits<float>::max() );
             //el_dEtaIn ->push_back( el->deltaEtaSuperClusterTrackAtVtx());
 
             el_dPhiIn ->push_back( el->deltaPhiSuperClusterTrackAtVtx());
