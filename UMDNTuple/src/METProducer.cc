@@ -5,8 +5,8 @@
 METProducer::METProducer(  ) : 
     met_pt(0),
     met_phi(0),
-    allmet_pt(0),
-    allmet_phi(0),
+    //allmet_pt(0),
+    //allmet_phi(0),
     met_JetResUp_pt(0),
     met_JetResUp_phi(0),
     met_JetResDown_pt(0),
@@ -53,8 +53,8 @@ void METProducer::initialize( const std::string &prefix,
     tree->Branch( (prefix + "_pt" ).c_str(), &met_pt );
     tree->Branch( (prefix + "_phi").c_str(), &met_phi );
     if( _detail > 0 ) {
-        tree->Branch( (prefix + "_all_pt" ).c_str(), &allmet_pt );
-        tree->Branch( (prefix + "_all_phi").c_str(), &allmet_phi );
+        //tree->Branch( (prefix + "_all_pt" ).c_str(), &allmet_pt );
+        //tree->Branch( (prefix + "_all_phi").c_str(), &allmet_phi );
 
         tree->Branch( (prefix + "_JetResUp_pt").c_str()           , &met_JetResUp_pt );
         tree->Branch( (prefix + "_JetResUp_phi").c_str()          , &met_JetResUp_phi );
@@ -100,18 +100,18 @@ void METProducer::produce(const edm::Event &iEvent ) {
     met_pt = mets->ptrAt(0)->pt();
     met_phi = mets->ptrAt(0)->phi();
     if( _detail > 0 ) {  
-        allmet_pt->clear();
-        allmet_phi->clear();
+        //allmet_pt->clear();
+        //allmet_phi->clear();
    
         //std::cout<<pat::MET::Raw<<" "<<pat::MET::METCorrectionLevelSize<<std::endl;
         //for  (int i =pat::MET::Raw ; i!=pat::MET::METCorrectionLevelSize-1;i++){
-        for  (int i =0; i<10;i++){ // difference between 80X and 94X... extra corrections added
-	    pat::MET::METCorrectionLevel ii = static_cast<pat::MET::METCorrectionLevel> (i);
+        //for  (int i =0; i<10;i++){ // difference between 80X and 94X... extra corrections added
+	    //pat::MET::METCorrectionLevel ii = static_cast<pat::MET::METCorrectionLevel> (i);
 	    //std::cout<<i<< " "<<mets->ptrAt(0)->corPt (ii)<< " "
 	    //       	 	  <<mets->ptrAt(0)->corPhi(ii)<<std::endl;
-        	allmet_pt->push_back(	       mets->ptrAt(0)->corPt (ii));
-        	allmet_phi->push_back(	       mets->ptrAt(0)->corPhi (ii));
-        }
+        	//allmet_pt->push_back(	       mets->ptrAt(0)->corPt (ii));
+        	//allmet_phi->push_back(	       mets->ptrAt(0)->corPhi (ii));
+        //}
 
         met_Type1XY_pt            = mets->ptrAt(0)->corPt (pat::MET::Type1XY           );
         met_Type1XY_phi           = mets->ptrAt(0)->corPhi(pat::MET::Type1XY           );

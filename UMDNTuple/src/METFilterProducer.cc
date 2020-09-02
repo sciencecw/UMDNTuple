@@ -49,6 +49,9 @@ void METFilterProducer::addBadChargedCandidateFilterToken( const edm::EDGetToken
 void METFilterProducer::addBadPFMuonFilterToken( const edm::EDGetTokenT<bool> & tok)  { 
     _BadPFMuonFilterToken = tok;
 }
+void METFilterProducer::addecalBadCalibReducedMINIAODFilterToken( const edm::EDGetTokenT<bool> & tok)  { 
+    _ecalBadCalibReducedMINIAODFilterToken = tok;
+}
 
 void METFilterProducer::produce(const edm::Event &iEvent ) {
 
@@ -98,6 +101,11 @@ void METFilterProducer::produce(const edm::Event &iEvent ) {
             edm::Handle<bool> ifilterbadPFMuon;
             iEvent.getByToken(_BadPFMuonFilterToken, ifilterbadPFMuon);
             if( *ifilterbadPFMuon ) _passing_filters->push_back( mitr->second );
+        }
+        if( mitr->first == "Flag_ecalBadCalibReducedMINIAODFilter" ) {
+            edm::Handle<bool> ifilterecalBadCalib;
+            iEvent.getByToken(_ecalBadCalibReducedMINIAODFilterToken, ifilterecalBadCalib);
+            if( *ifilterecalBadCalib ) _passing_filters->push_back( mitr->second );
         }
     }
 

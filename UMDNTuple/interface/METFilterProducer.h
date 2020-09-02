@@ -22,6 +22,7 @@ class METFilterProducer {
         void produce(const edm::Event &iEvent );
         void addBadChargedCandidateFilterToken( const edm::EDGetTokenT<bool> &);
         void addBadPFMuonFilterToken( const edm::EDGetTokenT<bool> &);
+        void addecalBadCalibReducedMINIAODFilterToken( const edm::EDGetTokenT<bool> &);
         void endRun( );
 
 
@@ -32,6 +33,7 @@ class METFilterProducer {
         edm::EDGetTokenT<edm::TriggerResults> _filterToken;
         edm::EDGetTokenT<bool> _BadChCandFilterToken;
         edm::EDGetTokenT<bool> _BadPFMuonFilterToken;
+        edm::EDGetTokenT<bool> _ecalBadCalibReducedMINIAODFilterToken;
 
         std::map<std::string, int> _filter_map;
         std::vector<std::pair<int, int> > _filter_idx_map;
