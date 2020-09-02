@@ -25,6 +25,11 @@ git clone git@github.com:cms-data/EgammaAnalysis-ElectronTools.git EgammaAnalysi
 scram b -j8
 ```
 
+Add MET package to process MET filters
+```
+git cms-addpkg RecoMET/METFilters
+```
+
 Get the DeepMETProducer
 ```
 git cms-merge-topic yongbinfeng:DeepMET
