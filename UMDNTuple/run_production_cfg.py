@@ -37,7 +37,8 @@ opt.inputFiles = [
     #'root://cms-xrd-global.cern.ch//store/data/Run2016G/SingleElectron/MINIAOD/03Feb2017-v1/50000/004A75AB-B2EA-E611-B000-24BE05CEFDF1.root',
     #'/store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14_ext3-v1/30000/00026C15-20DF-E911-ACFB-FA163E388F2A.root'
     '/store/mc/RunIISummer16MiniAODv3/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3_ext2-v1/100000/005FEC6C-D6C2-E811-A83B-A0369FC5E094.root'
-    #'/store/data/Run2016H/SingleElectron/MINIAOD/17Jul2018-v1/20000/E4F33560-978D-E811-AAF8-0CC47A01035C.root'
+    #'/store/mc/RunIISummer16MiniAODv3/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v2/80000/FC17F3AA-4BEF-E811-82FA-0CC47AC52D6A.root'
+#    '/store/data/Run2016H/SingleElectron/MINIAOD/17Jul2018-v1/20000/E4F33560-978D-E811-AAF8-0CC47A01035C.root'
     #'/store/mc/RunIISummer16MiniAODv3/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/60000/1C6659CD-F5E4-E811-BFA6-E0071B73C600.root'
 ]
 
@@ -117,26 +118,44 @@ process.BadChargedCandidateFilter.taggingMode = cms.bool( True )
 
 
 
+process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
+baddetEcallist = cms.vuint32(
+[872439604,872422825,872420274,872423218,872423215,872416066,872435036,872439336,
+    872420273,872436907,872420147,872439731,872436657,872420397,872439732,872439339,
+    872439603,872422436,872439861,872437051,872437052,872420649,872421950,872437185,
+    872422564,872421566,872421695,872421955,872421567,872437184,872421951,872421694,
+    872437056,872437057,872437313,872438182,872438951,872439990,872439864,872439609,
+    872437181,872437182,872437053,872436794,872436667,872436536,872421541,872421413,
+    872421414,872421031,872423083,872421439])
+process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
+    "EcalBadCalibFilter",
+    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
+    ecalMinEt        = cms.double(50.),
+    baddetEcal    = baddetEcallist, 
+    taggingMode = cms.bool(True),
+    debug = cms.bool(False)
+    )
+
 #------------------------------------
 #Condition DB tag
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 if opt.year == '2016': 
-	dataGlobalTag = '102X_dataRun2_v11'
-	mcGlobalTag = '102X_mcRun2_asymptotic_v7'
+	dataGlobalTag = '102X_dataRun2_v13'
+	mcGlobalTag = '102X_mcRun2_asymptotic_v8'
 	egamma_era='2016-Legacy'
 	prefire_era="2016BtoH"
 if opt.year == '2017':
-	dataGlobalTag = '102X_dataRun2_v11'
-	mcGlobalTag = '102X_mc2017_realistic_v7'
+	dataGlobalTag = '102X_dataRun2_v13'
+	mcGlobalTag = '102X_mc2017_realistic_v8'
 	egamma_era='2017-Nov17ReReco'
 	prefire_era="2017BtoF"
 if opt.year == '2018':
-	dataGlobalTag = '102X_dataRun2_v12'	## 2018ABC
-	mcGlobalTag = '102X_upgrade2018_realistic_v20'
+	dataGlobalTag = '102X_dataRun2_v13'	## 2018ABC
+	mcGlobalTag = '102X_upgrade2018_realistic_v21'
 	egamma_era='2018-Prompt'
 if opt.year == '2018D':
-	dataGlobalTag = '102X_dataRun2_Prompt_v15' 		## 2018D
-	mcGlobalTag = '102X_upgrade2018_realistic_v20'
+	dataGlobalTag = '102X_dataRun2_Prompt_v16' 		## 2018D
+	#mcGlobalTag = '102X_upgrade2018_realistic_v21'
 	egamma_era='2018-Prompt'
 
 if opt.isMC == 1:
@@ -426,6 +445,7 @@ if opt.year == '2016':
     '261:HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55',
     '262:HLT_Photon42_R9Id85_OR_CaloId24b40e_Iso50T80L_Photon25_AND_HE10_R9Id65_Eta2_Mass15',
     )
+
 filter_map = cms.untracked.vstring( 
     '1:Flag_HBHENoiseFilter',
     '2:Flag_HBHENoiseIsoFilter',
@@ -447,19 +467,10 @@ filter_map = cms.untracked.vstring(
     '18:Flag_trkPOG_manystripclus53X',
     '19:Flag_trkPOG_toomanystripclus53X',
     '20:Flag_trkPOG_logErrorTooManyClusters',
-    # these are added 'manually' because they are not availbe in the miniAOD
     '100:Flag_BadChargedCandidateFilter',
     '101:Flag_BadPFMuonFilter',
+    '102:Flag_ecalBadCalibReducedMINIAODFilter'
 )
-
-
-if opt.year in ['2016', '2017']:
-  from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
-  process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
-      DataEra = cms.string(prefire_era),
-      UseJetEMPt = cms.bool(False),
-      PrefiringRateSystematicUncty = cms.double(0.2),
-      SkipWarnings = False)
 
 from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
@@ -479,6 +490,15 @@ updateJetCollection(
       ],
    postfix='NewDFTraining'
 )
+
+if opt.year in ['2016', '2017']:
+  from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
+  process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
+      DataEra = cms.string(prefire_era),
+      UseJetEMPt = cms.bool(False),
+      PrefiringRateSystematicUncty = cms.double(0.2),
+      SkipWarnings = False)
+
 
 elecIdVeryLooseStr = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-veto")
 elecIdLooseStr     = cms.untracked.string("cutBasedElectronID-Fall17-94X-V2-loose")
@@ -508,17 +528,19 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
         phoIdTightStr  = phoIdTightStr  ,
         # photon energy scale and smearings
         phoEneCalibStr = cms.untracked.string("ecalEnergyPostCorr"),
-    jetTag     = cms.untracked.InputTag('slimmedJets'),
+    #jetTag     = cms.untracked.InputTag('slimmedJets'),
+    jetTag     = cms.untracked.InputTag('selectedUpdatedPatJetsNewDFTraining'),
     fatjetTag     = cms.untracked.InputTag('slimmedJetsAK8'),
     metTag     = cms.untracked.InputTag('slimmedMETs'),
     puppimetTag = cms.untracked.InputTag('slimmedMETsPuppi'),
-    deepmetTag = cms.untracked.InputTag('deepMETProducer'),
+    #deepmetTag = cms.untracked.InputTag('deepMETProducer'),
     triggerTag  = cms.untracked.InputTag('TriggerResults', '', 'HLT'),
     triggerObjTag = cms.untracked.InputTag('slimmedPatTrigger'),
     triggerMap = trigger_map,
     metFilterTag  = cms.untracked.InputTag('TriggerResults', '', 'RECO'),
     BadChargedCandidateFilter = cms.untracked.InputTag('BadChargedCandidateFilter'),
     BadPFMuonFilter = cms.untracked.InputTag('BadPFMuonFilter'),
+    ecalBadCalibReducedMINIAODFilter = cms.untracked.InputTag('ecalBadCalibReducedMINIAODFilter'),
     metFilterMap = filter_map,
 
     beamSpotTag = cms.untracked.InputTag('offlineBeamSpot'),
@@ -539,7 +561,8 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
     genParticleTag = cms.untracked.InputTag('prunedGenParticles'),
     genDressedLeptonTag = cms.untracked.InputTag('particleLevel:leptons'),
     genMetTag = cms.untracked.InputTag('particleLevel:mets'),
-    doDeepMET = cms.untracked.bool(True) if opt.year == '2016' else cms.untracked.bool(False),
+    #doDeepMET = cms.untracked.bool(True) if opt.year == '2016' else cms.untracked.bool(False),
+    doDeepMET = cms.untracked.bool(False),
 
     electronDetailLevel = cms.untracked.int32( 1 ),
     photonDetailLevel = cms.untracked.int32( 1 ),
@@ -572,22 +595,24 @@ process.UMDNTuple = cms.EDAnalyzer("UMDNTuple",
 
 process.p = cms.Path()
 
+
 #process.p += process.selectedElectrons
 process.p += process.egammaPostRecoSeq
 # run additional MET filters
 process.p += process.BadPFMuonFilter
 process.p += process.BadChargedCandidateFilter
+process.p += process.ecalBadCalibReducedMINIAODFilter
 
 # prefiring weight
 if opt.isMC and opt.year in ['2016','2017']: process.p += process.prefiringweight
 
-if opt.year == '2016': 
-    from RecoMET.METPUSubtraction.deepMETProducer_cfi import deepMETProducer
-    process.deepMETProducer = deepMETProducer.clone(
-        graph_path = cms.string('RecoMET/METPUSubtraction/data/tf_models/deepmet_2016.pb'),
-        ignore_leptons = cms.bool(True),
-    )
-    process.p += process.deepMETProducer
+#if opt.year == '2016': 
+#    from RecoMET.METPUSubtraction.deepMETProducer_cfi import deepMETProducer
+#    process.deepMETProducer = deepMETProducer.clone(
+#        graph_path = cms.string('RecoMET/METPUSubtraction/data/tf_models/deepmet_2016.pb'),
+#        ignore_leptons = cms.bool(True),
+#    )
+#    process.p += process.deepMETProducer
 
 if opt.isMC == 1:
     process.load("GeneratorInterface.RivetInterface.mergedGenParticles_cfi")
@@ -598,4 +623,10 @@ if opt.isMC == 1:
     process.p += process.mergedGenParticles*process.genParticles2HepMC*process.particleLevel
 
 process.p += process.UMDNTuple
+process.p.associate(process.patAlgosToolsTask) ## temporary fix for DeepFlavour variables
 
+#import os
+#outFile = open("tmpConfig.py","w")
+#outFile.write("import FWCore.ParameterSet.Config as cms\n")
+#outFile.write(process.dumpPython())
+#outFile.close()

@@ -26,8 +26,8 @@ class METProducer {
 
         float met_pt;
         float met_phi;
-	std::vector<float> *allmet_pt;
-	std::vector<float> *allmet_phi;
+	//std::vector<float> *allmet_pt;
+	//std::vector<float> *allmet_phi;
 
         float met_JetResUp_pt;
         float met_JetResUp_phi;
